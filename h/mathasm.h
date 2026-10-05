@@ -880,9 +880,14 @@ extern	ULong SHDIVSIN (SLong,UByte,ULong);
 // Returns
 //
 //-----------------------------------------------------------------------------
-inline ULong SHDIVSIN (SLong num1,UByte num2,ULong num3)
+inline SLong SHDIVSIN (SLong num1,UByte num2,ULong num3)
 {
-	return (((signed __int64)num1 << num2) / num3);
+	//RERUN: shipped asm: eax=num1<<cl truncates to 32 bits, edx=num1>>(32-cl)
+	//sign-extends -> dividend = sext64(trunc32(num1<<num2)); idiv num3 is a
+	//SIGNED 32-bit divisor (sin/cos go negative). 64-bit-shift + unsigned
+	//divisor both diverged from shipped.
+	const int32_t lo = (int32_t)((uint32_t)num1 << (num2 & 31));
+	return num3 ? (SLong)((int64_t)lo / (int32_t)num3) : 0;
 /*    _asm
     {
 		push	ecx
