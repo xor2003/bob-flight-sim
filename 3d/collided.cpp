@@ -73,6 +73,7 @@ http://www.simhq.com/cgi-bin/boards/cgi-bin/forumdisplay.cgi?action=topics&forum
 #define F_GRAFIX												//DAW 05Aug96
 #define F_SOUNDS
 #define F_BATTLE
+#include	<math.h>											//RERUN: lrint for FISTP rounding
 #include	"Collided.h"
 #include	"shapes.h"											//RJS 02Dec97
 // #include	"JimLong.h"											//PD 06Sep96
@@ -160,7 +161,9 @@ SLong oldGroundHeight(SLong& x, SLong& z, Coeffs& coeff)
 */
 SLong GroundHeight(SLong& x, SLong& z, Coeffs& coeff)
 {
-	return -((coeff.a * x + coeff.c * (double)z) / coeff.b);
+	//RERUN: was implicit double->SLong truncation; shipped x87 FISTP rounds
+	//to nearest -- lrint under default rounding mode reproduces it exactly.
+	return (SLong)lrint(-((coeff.a * x + coeff.c * (double)z) / coeff.b));
 }
 
 //#endif

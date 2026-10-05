@@ -96,6 +96,8 @@ http://www.simhq.com/cgi-bin/boards/cgi-bin/forumdisplay.cgi?action=topics&forum
 #include "..\mfc\resource.h"
 #include	"globrefs.h"
 #include "myerror.h"
+#include "mytime.h"										//RERUN: SECSPERMIN/SECSPERHR/HR01 constants (was transitive via MFC)
+#include "missman2.h"										//RERUN: MMC macro (was transitive via MFC)
 
 #include "package.h"
 #include "bitfield.h"
