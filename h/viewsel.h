@@ -179,19 +179,39 @@ class	ViewPoint : public mobileitem							//PD 08Mar96
 	friend class	InfoPanelSheet;								//JIM 11Oct96
 	friend class	DPlay;										//AMM 16Mar99
 	typedef void(MYCALL ViewPoint::*InitRtnP) (void);
+	#ifdef __GNUC__
+	typedef void InitRtn(void ); //RERUN: GCC member-fn typedef
+#else
 	typedef void(ViewPoint::InitRtn) (void );
+#endif
 /*#ifdef __MSVC__
 	typedef void(__cdecl ViewPoint::*InitRtnP) (void );
+	#ifdef __GNUC__
+	typedef void InitRtn(void ); //RERUN: GCC member-fn typedef
+#else
 	typedef void(ViewPoint::InitRtn) (void );
+#endif
 
 	typedef void(__cdecl ViewPoint::*ZmRtRtnP) (ZmRtFlags );
+	#ifdef __GNUC__
+	typedef void ZmRtRtn(ZmRtFlags ); //RERUN: GCC member-fn typedef
+#else
 	typedef void(ViewPoint::ZmRtRtn) (ZmRtFlags );
+#endif
 
 	typedef void(__cdecl ViewPoint::*DrawRtnP) (void );
+	#ifdef __GNUC__
+	typedef void DrawRtn(void ); //RERUN: GCC member-fn typedef
+#else
 	typedef void(ViewPoint::DrawRtn) (void );
+#endif
 
 	typedef void(__cdecl ViewPoint::*QVRtnP) (QuickView );		//PD 18Nov97
-	typedef void(ViewPoint::QVRtn) (QuickView );				//PD 28Jan97
+	#ifdef __GNUC__
+	typedef void QVRtn(QuickView ); //RERUN: GCC member-fn typedef
+#else
+	typedef void(ViewPoint::QVRtn) (QuickView );
+#endif				//PD 28Jan97
 #else*/
 	//	typedef void(MYCALL ViewPoint::*InitRtnP) ();
 

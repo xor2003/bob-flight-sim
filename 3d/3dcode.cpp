@@ -89,6 +89,7 @@ http://www.simhq.com/cgi-bin/boards/cgi-bin/forumdisplay.cgi?action=topics&forum
 //#define	_NO_LENSFLARE_
 
 	#include	"DOSDefs.h"
+#include <new>
 #include <mmsystem.h>
 #define F_GRAFIX
 #define F_BATTLE
@@ -1958,7 +1959,7 @@ SLong ThreeDee::AddVapourObject(ShapeNum	shape,
 								UWord		failedcnt)
 {
 	SLong		distz;
-	rotitem*	VapItemP = new rotitem;
+	rotitem*	VapItemP = new (std::nothrow) rotitem;	//RERUN: MSVC6 null-new semantics; else-branch is the OOM path
 	if (VapItemP)
 	{
 		SLong		wx, wy, wz;

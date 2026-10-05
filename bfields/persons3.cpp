@@ -3286,7 +3286,7 @@ void Persons3::FinishSetPiece()
 
 	if(Persons2::PlayerGhostAC==Persons2::PlayerSeenAC)								//JIM 12Sep97
 	{
-		AirStrucPtr newac=new AirStruc;
+		AirStrucPtr newac=new (std::nothrow) AirStruc;	//RERUN: MSVC6 null-new; SayAndQuit is the OOM path
 
 		if (newac==NULL)
 			_Error.SayAndQuit("could not create newac");
@@ -3498,7 +3498,7 @@ void	AirStruc::SetLettering(int lettering)
 	{	//LW bomber
 		l1=lettering%40;
 		l2=((lettering/40)%40);
-		l4=LW_letters[((lettering/1600)%40)];
+		l4=LW_letters[((lettering/1600)%26)];	//RERUN: was %40 - table is [26], indices 26-39 OOB
 		l3=pilotnum;
 	}
 	AircraftAnimData*	anim=Anim;
@@ -3794,7 +3794,7 @@ void	Persons3::ExpandPilotedFlights()
 				instancesSAG[i]-=replace;
 				availablerealaircraft-=replace;
 				sagexpcounts[i].numavailable+=replace;
-				donesome++;
+				donesome=TRUE; //RERUN: bool++ removed in C++17, always meant set-true
 			}
 		}
 	breakif(!donesome);

@@ -419,7 +419,8 @@ void FINDPNTSLNSPLYS(ip)
 						for ( i=0;i<4;i++)
 							breakif (pointdec[endcode].unpairedfrom[i]==NULLCON);
 						//assert i!=4;
-						pointdec[endcode].unpairedfrom[i]=(UByte)curr;
+						if (i<4)	//RERUN: all 4 slots full -> drop entry; [4] write clobbered alt (upstream //assert i!=4)
+							pointdec[endcode].unpairedfrom[i]=(UByte)curr;
 					}
 					last=curr;
 					curr=endcode;
@@ -446,7 +447,8 @@ void FINDPNTSLNSPLYS(ip)
 					for ( i=0;i<4;i++)
 						breakif (pointdec[point].unpairedfrom[i]==NULLCON);
 					//assert i!=4;
-					pointdec[point].unpairedfrom[i]=(UByte)curr;
+					if (i<4)	//RERUN: all 4 slots full -> drop entry; [4] write clobbered alt (upstream //assert i!=4)
+						pointdec[point].unpairedfrom[i]=(UByte)curr;
 				}
 
 			}

@@ -96,7 +96,7 @@ http://www.simhq.com/cgi-bin/boards/cgi-bin/forumdisplay.cgi?action=topics&forum
 #ifdef GRCHECK
 #include "replay.h"
 #endif
-#include	"makebf.cxx"
+#include	"MAKEBF.CXX" //RERUN: case
 extern	ULong&	GR_TakeOffTime;
 //#undef source
 	//DON'T WRITE INCLUDE FILES HERE, PUT THEM IN BFCOMMON
@@ -229,7 +229,7 @@ CON	Persons2::Persons2(WorldStuff* world,ViewPoint* vp)
 ItemBase&		Persons2::ConvertPtrUID(UniqueID tmpUID)
 {
 	if (tmpUID==0)
-		return *(ItemBase*)NULL;
+		return *(ItemBase*)NULL;	// cppcheck-suppress nullPointer ; deliberate null-ref sentinel (callers test &ref)
 //#ifndef	__BCPLUSPLUS__
 	assert (tmpUID>0 && tmpUID<=IllegalSepID);
 //#endif

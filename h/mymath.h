@@ -9,10 +9,12 @@
 #define	MATH_Included
 
 //stuff stolen from the system includes - why we have to use system file names - who knows
-extern "C" {
+#if !defined(__GNUC__)  //RERUN: glibc math.h already declares these noexcept;
+extern "C" {            //         MSVC needed the manual decls
 extern double	pow( double __x, double __y );
 extern double	exp( double __x );
 }
+#endif
 
 
 #define	DEFAULT_MATH 0

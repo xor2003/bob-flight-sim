@@ -46,7 +46,7 @@
 //TempCode ARM 12Sep96 #include 	<windows.h>											//ARM 09Aug96
 //TempCode ARM 12Sep96 #include 	<windowsx.h>										//ARM 09Aug96
 //TempCode ARM 12Sep96 #include 	<mmsystem.h>										//ARM 09Aug96
-//TempCode ARM 12Sep96 #include	"c:\dxsdk\sdk\inc\dplay.h"							//ARM 09Aug96
+//TempCode ARM 12Sep96 #include	"c:/dxsdk/sdk/inc/dplay.h"							//ARM 09Aug96
 #include	"winmove.h"											//ARM 09Aug96
 
 #include	"modinst.h"

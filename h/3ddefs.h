@@ -9,7 +9,7 @@
 #define	D3DDEFS_Included
 
 		#include	"Palette.h"
-#include "..\lib3d\lib3d.h"
+#include "../lib3d/lib3d.h"
 
 #define	DEFAULT_D3DDEFS 0
 

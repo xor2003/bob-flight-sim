@@ -463,7 +463,8 @@ public:
         };
         D3DCOLOR d3dcolor;
     };
-#ifdef __GNUC__
+#if defined(__GNUC__) && !defined(_WIN32)
+    // RERUN: under mingw D3DCOLOR==ULong; operator ULong() already covers it
     inline operator D3DCOLOR()
     {
         return d3dcolor;
@@ -2445,7 +2446,7 @@ private:
     }
 
 #pragma warnmsg ( "mask and shift can be quicker" )
-    inline UByte& GetColAlpha( const ULong col )
+    inline UByte GetColAlpha( const ULong col )		//RERUN: was UByte& - returned ref to by-value param (dangling)
     {
         UByte *t = (UByte*)(&col);
         return t[3];

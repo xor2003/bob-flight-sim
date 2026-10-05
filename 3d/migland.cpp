@@ -1803,7 +1803,8 @@ void CDecompressData::SkipPointsLinesPolys(UByte*& ip)
 						for ( i=0;i<4;i++)
 							breakif (pointdec[endcode].unpairedfrom[i]==NULLCON);
 						//assert i!=4;
-						pointdec[endcode].unpairedfrom[i]=(UByte)curr;
+						if (i<4)	//RERUN: all 4 slots full -> drop entry; [4] write clobbered alt (upstream //assert i!=4)
+							pointdec[endcode].unpairedfrom[i]=(UByte)curr;
 					}
 					last=curr;
 					curr=endcode;
@@ -1829,7 +1830,8 @@ void CDecompressData::SkipPointsLinesPolys(UByte*& ip)
 					for ( i=0;i<4;i++)
 						breakif (pointdec[point].unpairedfrom[i]==NULLCON);
 					//assert i!=4;
-					pointdec[point].unpairedfrom[i]=(UByte)curr;
+					if (i<4)	//RERUN: all 4 slots full -> drop entry; [4] write clobbered alt (upstream //assert i!=4)
+						pointdec[point].unpairedfrom[i]=(UByte)curr;
 				}
 
 			}
@@ -1998,7 +2000,8 @@ void CDecompressData::copyBody(UByte*& ip,UByte* pdst)
 						for ( i=0;i<4;i++)
 							breakif (pointdec[endcode].unpairedfrom[i]==NULLCON);
 						//assert i!=4;
-						pointdec[endcode].unpairedfrom[i]=(UByte)curr;
+						if (i<4)	//RERUN: all 4 slots full -> drop entry; [4] write clobbered alt (upstream //assert i!=4)
+							pointdec[endcode].unpairedfrom[i]=(UByte)curr;
 					}
 					last=curr;
 					curr=endcode;
@@ -2023,7 +2026,8 @@ void CDecompressData::copyBody(UByte*& ip,UByte* pdst)
 					for ( i=0;i<4;i++)
 						breakif (pointdec[point].unpairedfrom[i]==NULLCON);
 					//assert i!=4;
-					pointdec[point].unpairedfrom[i]=(UByte)curr;
+					if (i<4)	//RERUN: all 4 slots full -> drop entry; [4] write clobbered alt (upstream //assert i!=4)
+						pointdec[point].unpairedfrom[i]=(UByte)curr;
 				}
 
 			}
@@ -3428,7 +3432,7 @@ void CDecompressData::GenerateEdges( UByte& hasCliffs )
 
 	pointCount=0;
 
-	UByte initialRouteType;
+	UByte initialRouteType = RT_NULL;			//RERUN: uninit if LineStream leads with points (IsValidRoute(RT_NULL)=false)
 
 	while ((code=*pData++)!=JOIN_POLY_NEXT)
 	{
@@ -3734,6 +3738,7 @@ void CDecompressData::GeneratePointFlags(UWord edgePointCount)
 				routeCon[point].count=rIndex;
 			}
 			else{
+				type=AT_NULL;	flag=0;			//RERUN: uninit for non-JOIN_POLY codes
 				pointFlags[code]++;
 			 	UByte rIndex=routeCon[code].count;
 				routeCon[code].types[rIndex++]=type;
@@ -3768,6 +3773,7 @@ void CDecompressData::GeneratePointFlags(UWord edgePointCount)
 					pointFlags[lastCode]=3;		//forced to be a junction
 			}
 			else{
+				type=AT_NULL;	flag=0;			//RERUN: uninit for non-JOIN_POLY codes
 			 	UByte rIndex=routeCon[code].count;
 				routeCon[code].types[rIndex++]=type;
 				routeCon[code].flags|=flag;
@@ -3916,7 +3922,7 @@ void* CCacheBlock::operator new(size_t)
 void CCacheBlock::operator delete(void* pDMe)
 {
 	CCacheBlock* pDelMe=(CCacheBlock*)pDMe;
-	pAlloc->Free(pDelMe);
+	if (pAlloc) pAlloc->Free(pDelMe);				//RERUN: pAlloc may be torn down before late deletes
 	pDelMe->pParent=pDelMe->pNorth=pDelMe->pEast=(CCacheBlock*)0xCDCDCDCD;
 }
 
@@ -4517,6 +4523,7 @@ void CMigLand::BigInit(MovingItem* vp)
 DataRecord CMigLand::GetData(ULong x,ULong z,ULong rez,const bool doSheep, DataRecord& dr)
 {
 	DataRecord retVal;
+	retVal.x = x;	retVal.z = z;	//RERUN: early-return paths left them uninit (fallthrough sets them below)
 
 	CPrimaryCB* pPrimaryCB=CPrimaryCB::pHead;
 	CPrimaryDB* pPrimaryDB=NULL;

@@ -446,7 +446,7 @@ static	bool	OverFrance(Coords3D&);									//RJS 18Sep00
 
 #endif
 #endif
-#ifndef	__MSVC__
+#if !defined(__MSVC__) && !defined(__forceinline)
 #define	__forceinline inline
 #endif
 __forceinline	ItemBase& operator*()

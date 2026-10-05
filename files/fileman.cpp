@@ -111,7 +111,7 @@
 #include	"Shapes.h"
 #include	"lstream.h"
 #include "monotxt.h"
-#include "..\mfc\resource.h"
+#include "../mfc/resource.h"
 #ifndef __BCPLUSPLUS__
 #include "CString.h"
 #endif
@@ -250,7 +250,7 @@ string	dupandrepointtxt(string&	srcandtrg)
 	string
 		newtrg = new char[strlen(srcandtrg) + 1];
 	strcpy(newtrg, srcandtrg);
-	return(srcandtrg = newtrg);
+	return(srcandtrg = newtrg);	// cppcheck-suppress memleak ; ownership transfers to srcandtrg
 }
 
 #define RUNTIME 200
@@ -959,7 +959,7 @@ void replace_extention(string &path, string from, string to)
 		*i = '\0';
 		strcat(path2, to);
 
-		FILE* retval = fopen(path2, "rb");
+		FILE* retval = fopen_ci(path2, "rb"); //RERUN: was fopen - case-insensitive resolve
 		if (retval != NULL)
 		{
 			strcpy(path, path2);
@@ -1036,7 +1036,7 @@ FILE*	fileman::easyopennumberedfile(FileNum	MyFile)
 	TRACING("Will open: " << MyFile);
 	string	name = namenumberedfile(MyFile);
 	TRACING("Opening: " << name);
-	FILE* rv = fopen(name, "rb");
+	FILE* rv = fopen_ci(name, "rb"); //RERUN: was fopen - case-insensitive resolve
 	return(rv);
 
 }
@@ -1136,7 +1136,7 @@ Bool	fileman::existnumberedfile(FileNum	MyFile)
 	if (name == NULL || name[0] == 0 || name[1] == 0)
 		return(FALSE);
 	//else
-	FILE* retval = fopen(name, "rb");
+	FILE* retval = fopen_ci(name, "rb"); //RERUN: was fopen - case-insensitive resolve
 	if (retval == NULL)
 	{
 		TRACING("Not existing: " << name);
@@ -1349,7 +1349,7 @@ bool	processlock)	//X //process locking always enabled externally
 			if ((fileblockdata = new(__HERE__ ": -data for file num:", MyFile) voidbigblock[link->datasize]) == NULL)
 #define new DEBUG_NEW
 #else
-			if ((fileblockdata = new voidbigblock [link->datasize])==NULL)
+			if ((fileblockdata = new (std::nothrow) voidbigblock [link->datasize])==NULL)
 #endif
 				_Error.EmitSysErr("Failed to allocate memory for file load "
 				"(file %x, size %d)",
@@ -1928,6 +1928,22 @@ void	dirlist::makedirlist(char* p, char* w)
 		if (!FindNextFile(h, &results)) break;
 	}
 
+#endif
+#if defined(__GNUC__) //RERUN: native dir scan via migalley's io_compat
+	struct _finddata_t results;   // (_findfirst does FNM_CASEFOLD matching,
+	long h = _findfirst(pathname, &results); // so "*.X8" also hits .x8 files)
+	while (i < MAXFLIST && h != -1)
+	{
+		if (!(results.attrib & _A_SUBDIR))
+		{
+			p = results.name; // no 8.3 alias on Linux
+			w = &tmpflist[i*FNAMESIZE];
+			while ((*w++ = *p++) != 0);
+			i++;
+		}
+		if (_findnext(h, &results)) break;
+	}
+	if (h != -1) _findclose(h);
 #endif
 	numfiles = i;
 	filelist = new char[i*FNAMESIZE];

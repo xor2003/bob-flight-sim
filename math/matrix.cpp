@@ -85,13 +85,7 @@ http://www.simhq.com/cgi-bin/boards/cgi-bin/forumdisplay.cgi?action=topics&forum
 
 	class	matrix	_matrix;
 
-#ifdef __GNUC__
-	inline unsigned char _BitScanReverse(unsigned long * const Index, const unsigned long Mask)
-	{
-		__asm__("bsrl %[Mask], %[Index]" : [Index] "=r" (*Index) : [Mask] "mr" (Mask));
-		return Mask ? 1 : 0;
-	}
-#endif
+#include "mathasm.h" //RERUN: shared __GNUC__ shim (was a local _BitScanReverse copy)
 
 //	MATRIX ELEMENTS
 //  ---------------
@@ -1913,7 +1907,7 @@ void matrix::multiply(FPMATRIX_PTR t, FPMATRIX_PTR sip)
 
 	//copy the new matrix back to sip
 
-	*t = *dip;
+	*t = *dip;	// cppcheck-suppress uninitvar ; all 9 fields written via di++ loop above
 }
 
 //컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴

@@ -13,7 +13,7 @@
 // SControl.h : header file
 //
 #include "rdialog.h"
-#include "..\mfc\resource.h"
+#include "../mfc/resource.h"
 #include "rstatic.h"
 #include "redtbt.h"
 #include "rbutton.h"

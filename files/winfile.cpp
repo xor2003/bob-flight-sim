@@ -426,10 +426,10 @@ void fileman::pingCD()
 				char buffer[10];
 				void*	retval = buffer;
 
-				LARGE_INTEGER	t1;
+				LARGE_INTEGER	t1={0};				//RERUN: QueryPerformanceCounter can fail w/o writing
 				QueryPerformanceCounter(&t1);
 				CDseekreadfilepos(cdfile->winhandle,cdfile->actualindex,retval,4);
-				LARGE_INTEGER	t2;
+				LARGE_INTEGER	t2={0};				//RERUN: ditto
 				QueryPerformanceCounter(&t2);
 				int t=t2.LowPart-t1.LowPart;
 				t>>=4;
@@ -460,7 +460,7 @@ void	fileman::CDseekreadfilepos(HANDLE winhandle,int index,void* buffer,int size
 
 	int	size=(sizecopy+2047)&-2048;
 
-	ULong retsize;
+	DWORD retsize;					//RERUN: DWORD not ULong - ReadFile wants DWORD* (same width, distinct type)
 	SetFilePointer(winhandle,index,NULL,FILE_BEGIN);
 	ReadFile(winhandle,readblockbuffer,size,&retsize,NULL);
 	retsize=GetLastError();

@@ -241,7 +241,7 @@ PrintVar(73, temp, "%.0f", FP(pModel->Elevator));
 	bool PropSettingChanged = FALSE;
 
 	PENGINE pEngine0 = pModel->EngineList;
-	PENGINE pEngine1 = pModel->EngineList->List.NextItem();
+	PENGINE pEngine1 = pEngine0 ? pEngine0->List.NextItem() : NULL;	//RERUN: EngineList derefed before the pEngine0 null check
 
 	if(pEngine0)
 	{

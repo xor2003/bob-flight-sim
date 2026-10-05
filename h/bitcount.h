@@ -77,7 +77,7 @@ template	<class EnumName,class	BaseSize> struct	OnlyField
 				}	n7;									     \
 	};														  \
 
-#ifdef	__MSVC__
+#if defined(__MSVC__) || defined(__GNUC__) //RERUN: typed-bitfield mechanism is portable C++, required for overview_* access
 //Built in enums are not efficiently stored
 //This mechanism allows us to compact them into bitfields as needed.
 //
@@ -116,10 +116,19 @@ template	<class size>	struct	WrapField
 	size	value;
 };
 
+//RERUN: typedef hoisted out of the anonymous union - MSVC allowed type members,
+//RERUN: standard C++ permits only data members there. Same-type re-typedef is legal.
 #define	FIRSTFIELD(size,Type,name,maxbitnum)		\
+typedef	WrapField	<size>	Overview;					   \
 BITFIELD_AGGREGATOR	{								 \
-	typedef	WrapField	<size>	Overview;	  \
 	Overview	overview_##name;			   \
+	FirstField	<Overview::fieldtype,Type,maxbitnum>	name;
+
+//RERUN: for a second+ field group in the same struct scope; class-scope member
+//RERUN: typedefs cannot be redeclared even to the same type, so reuse Overview.
+#define	FIRSTFIELD_NT(size,Type,name,maxbitnum)	\
+BITFIELD_AGGREGATOR	{								 \
+	Overview	overview_##name;				   \
 	FirstField	<Overview::fieldtype,Type,maxbitnum>	name;
 
 #define	SPAREFIELD(minbitnum,maxbitnum)										\
@@ -139,6 +148,7 @@ BITFIELD_AGGREGATOR	{								 \
 #else
 //rely on built in enums being efficient:
 #define	FIRSTFIELD(size,Type,name,maxb)		Type	name:(maxb+1) ;
+#define	FIRSTFIELD_NT(size,Type,name,maxb)	Type	name:(maxb+1) ;
 #define	BITFIELD(Type,name,minb,maxb)		Type	name:(maxb+1-minb);
 #define	SPAREFIELD(minb,maxb)		//NOWT
 #define	LASTFIELD(Type,name,minb,maxb)		Type	name:(maxb+1-minb);

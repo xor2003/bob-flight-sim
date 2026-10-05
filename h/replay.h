@@ -196,7 +196,7 @@ struct _asprim_values
 		BITFIELD(Bool,UseIntFuel,6,6)
 		LASTFIELD(Bool,FuelDumped,7,7)
 
-	FIRSTFIELD (UByte, Bool, StoresDumped,0)
+	FIRSTFIELD_NT (UByte, Bool, StoresDumped,0) //RERUN: second group reuses Overview
 		BITFIELD(Bool,Ejected,1,1)
 		BITFIELD(InFormation,information,2,5)
 		BITFIELD(Bool,playermoving,6,6)

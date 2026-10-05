@@ -1998,7 +1998,8 @@ void	TransObj::LaunchParachute(mobileitem* launcher,Coords3D& pos, SWord relpos,
 	AircraftAnimData*	acadptr = NULL;							//RJS 05Jul00
 	AirStrucPtr	ac = NULL;
 																		//RJS 7Jun00
-	if (SHAPESTUFF.GetShapePtr(launcher->shape)->AnimDataSize == AIRCRAFTANIM)	//RJS 7Jun00
+	if (SHAPESTUFF.GetShapePtr(launcher->shape)
+		&& SHAPESTUFF.GetShapePtr(launcher->shape)->AnimDataSize == AIRCRAFTANIM)	//RJS 7Jun00
 	{
 		acadptr = (AircraftAnimData *) launcher->Anim;			//RJS 05Jul00
 		canopyVal = acadptr->CANOPY;
@@ -3512,7 +3513,8 @@ void	TransObj::LaunchDustTrail2(	mobileitem* launcher,
 
 		LaunchVapourStream((UByteP)weapon,DUSSHP);				//RJS 17Sep97
 
-		if (SHAPESTUFF.GetShapePtr(launcher->shape)->AnimDataSize==AIRCRAFTANIM)
+		if (SHAPESTUFF.GetShapePtr(launcher->shape)
+		&& SHAPESTUFF.GetShapePtr(launcher->shape)->AnimDataSize==AIRCRAFTANIM)
 		{
 			AircraftAnimData*	aptr = (AircraftAnimData*)launcher->Anim;
 			aptr->hasdust = TRUE;
@@ -4487,7 +4489,8 @@ void	TransObj::LaunchNapalmStrike(mobileitem* launcher,WorldStuff& worldptr)
 void	TransObj::LaunchCanopyEject(mobileitem* launcher,WorldStuff& worldptr)
 {
 //DeadCode RJS 20Oct00 	Bool	alreadylaunched = FALSE;
-	if (SHAPESTUFF.GetShapePtr(launcher->shape)->AnimDataSize == AIRCRAFTANIM)
+	if (SHAPESTUFF.GetShapePtr(launcher->shape)
+		&& SHAPESTUFF.GetShapePtr(launcher->shape)->AnimDataSize == AIRCRAFTANIM)
 	{
 		if (	(launcher != Persons2::PlayerSeenAC)			//RJS 06Sep00
 			&&	(launcher->World.Y < FT_4000)	)					//RJS 26Sep00
@@ -4521,7 +4524,7 @@ void	TransObj::LaunchCanopyEject(mobileitem* launcher,WorldStuff& worldptr)
 				OpenChance = (OpenChance * Math_Lib.rnd()) >> 16;
 				if (	(OpenChance < 32)								//RJS 28Aug00
 					||	canopyState										//RJS 28Sep00
-					||	(ac->classtype->aerobaticfactor == AEROBATIC_LOW)	)	//RJS 28Sep00
+					||	(ac && ac->classtype->aerobaticfactor == AEROBATIC_LOW)	)	//RJS 28Sep00	//RERUN: ac may be null (see !ac below)
 				{
 					if (!ac)
 					{
@@ -7065,7 +7068,9 @@ void TransObj::MobileDelayedExplosion(TransientItemPtr transit, WorldStuff& worl
 			break;
 			case 4:
 			{
-				AirStrucPtr	ac = (AirStrucPtr)*transit->Target;
+				AirStrucPtr	ac = transit->Target ? (AirStrucPtr)*transit->Target : NULL;	//RERUN: Target may die mid-flight (null deref at cast)
+				if (ac)									//RERUN: ac==NULL when Target dead
+				{
 				if (!_Replay.Playback)
 				{
 					Squad_Diary.SetKilledAC(ac,ac->Anim);				//RJS 21Sep00
@@ -7086,6 +7091,7 @@ void TransObj::MobileDelayedExplosion(TransientItemPtr transit, WorldStuff& worl
 
 //DeadCode RJS 31May00 				LaunchFire(ac,worldptr);
 				LaunchAircraftFire(ac,ac->World,worldptr);
+				}
 
 				AddTransientItemToDeadList(transit);
 			}
@@ -14210,6 +14216,7 @@ SLong	TransObj::GetGroundLevel(ItemBase*	itm)
 SLong	TransObj::GetGroundLevel(ItemBase*	itm,UByte&	theArea)
 {
 	SLong	height = 0;	//HIGHESTGROUND;
+	theArea = AT_NULL;								//RERUN: uninit when above HIGHESTGROUND (callers IsWater etc.)
 //DeadCode DAW 01Jul99 	int newsect=0;
 //DeadCode DAW 01Jul99 	//landscape block size = 512*256 cm= 128Kcm= 1.3km
 //DeadCode DAW 01Jul99 	int sectx=itm->World.X>>17;

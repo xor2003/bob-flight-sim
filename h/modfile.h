@@ -126,6 +126,7 @@ static	int	fprintf(UFILE* ofile,const char* fmt ...)
 	va_list	marker;
 	va_start(marker, fmt);
 	int count=vsprintf(workspace,fmt,marker);
+	va_end(marker);						//RERUN: va_start without va_end is UB (x86 nop but required)
 	return(fwrite(workspace,1,count,ofile));
 }
 

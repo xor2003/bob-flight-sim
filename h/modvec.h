@@ -196,7 +196,7 @@ extern void FXPowerY (FP& x, FP& y, FP& ans);
 parm	[eax] [ebx] [ecx]			\
 
 #else
-#ifdef	__MSVC__
+#if defined(__MSVC__) || defined(__GNUC__) //RERUN: plain-C bodies work under GCC too
 
 inline FP FSqrt(FP n)
 {

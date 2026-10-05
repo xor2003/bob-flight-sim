@@ -33,7 +33,7 @@ using std::ios;
 class	BIStream:public	ifstream
 {
 public:
-CON	BIStream(char* fname): ifstream()	{open(fname,ios::in+ios::binary);}
+CON	BIStream(char* fname): ifstream()	{open(fname,ios::in|ios::binary);}
     
     BIStream &operator >> (           char * __b )	{return (read(__b,strlen(__b)));}
     BIStream &operator >> (           char & __b )	{return (read(&__b));}
@@ -80,13 +80,13 @@ if (this)
 else
 {
     close();
-    open(fname,ios::out + ios::binary);
+    open(fname,ios::out | ios::binary);
 }
 		}
 		
 		else
 
-	    open(fname,ios::out + ios::binary +
+	    open(fname,ios::out | ios::binary |
 			ios::trunc);
 				}
 

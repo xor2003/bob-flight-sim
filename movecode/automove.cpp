@@ -125,7 +125,7 @@ BITABLE		(Bool);
 #include	"node.h"
 #include	"overlay.h"
 #include	"rchatter.h"
-#include	"..\mfc\resource.h"
+#include	"../mfc/resource.h" //RERUN: path
 #include	"airstruc.h"
 #include	"animmove.h"										//RJS 11Jan00
 #include	"fastmath.h"												//RJS 30Jun00
@@ -3419,7 +3419,7 @@ void MoveAirStruc::AutoCrashTumble()
 				SHAPE.GetContactPoint((itemptr)this, CT_RIGHT, coords, offset, PushedOffset);
 				COORDS3D rwing = coords;
 
-				COORDS3D belly;
+				COORDS3D belly={0};	//RERUN: silences uninit-struct analysis (only read where GetContactPoint ran)
 				if((adptr->LEFTWINGOUT == BS_DEAD) || (adptr->RIGHTWINGOUT == BS_DEAD))
 					SHAPE.GetContactPoint((itemptr)this, CT_BELLY, belly, offset, PushedOffset);
 				if(adptr->LEFTWINGOUT == BS_DEAD)
@@ -10642,6 +10642,7 @@ SLong AirStruc::CalcBestClimbSpeed()
 	if(Height > 2000000) Height = 2000000;
 
 	SWord h = Height * 0.00001;	//cm -> km
+	if (h > 19) h = 19;	//RERUN: [h+1] OOB at Height=2000000 (array [21]); interp still yields v[20]
 	SLong v1, v2;
 	v1 = classtype->bestclimbspeed[h];
 	v2 = classtype->bestclimbspeed[h+1];
@@ -10676,6 +10677,7 @@ SWord AirStruc::CalcBestClimbPitch()
 	if(Height > 2000000) Height = 2000000;
 
 	SWord h = Height * 0.00001;	//cm -> km
+	if (h > 19) h = 19;	//RERUN: [h+1] OOB at Height=2000000 (array [21])
 	SWord p1, p2;
 	p1 = classtype->bestclimbang[h];
 	p2 = classtype->bestclimbang[h+1];
@@ -10751,6 +10753,7 @@ SLong AirStruc::CalcMaxVelSL()
 	if(Height > 2000000) Height = 2000000;
 
 	SLong h = Height / 100000;	//cm -> km
+	if (h > 19) h = 19;	//RERUN: [h+1] OOB at Height=2000000 (array [21])
 	SLong v1, v2;
 	v1 = classtype->maxvelsl[h];
 	v2 = classtype->maxvelsl[h+1];
@@ -11412,7 +11415,7 @@ Bool AirStruc::CarryingNapalm()
 	WeapAnimData*	weapon;
 	int				index;
 
-	for (index=0; index < 8; index++)
+	for (index=0; index < 5; index++)	//RERUN: was <8, OOB on weaponlaunchers[5] (read imagemap bytes as WeapAnimData)
 	{
 		weapon = &adptr->weaponlaunchers[index];
 		if (	weapon

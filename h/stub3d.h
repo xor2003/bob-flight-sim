@@ -76,12 +76,14 @@ private:
 ///////////////////////////////
 
 #ifdef __GNUC__
-inline long _InterlockedExchange(volatile long * const Target, const long Value)
+static inline long _rowan_InterlockedExchange(volatile long * const Target, const long Value)
 {
 	/* NOTE: __sync_lock_test_and_set would be an acquire barrier, so we force a full barrier */
 	__sync_synchronize();
 	return __sync_lock_test_and_set(Target, Value);
 }
+/* clang reserves the _InterlockedExchange builtin name; map the legacy name */
+#define _InterlockedExchange _rowan_InterlockedExchange
 
 #endif
 
@@ -156,7 +158,11 @@ class	CEvent;
 */
 struct IDirectInputA;
 typedef IDirectInputA *LPDIRECTINPUT;
+#ifdef ROWAN_DINPUT_STUB // RERUN: shared dinput stub provides the canonical type
+typedef IDirectInputDeviceA *LPDIRECTINPUTDEVICE;
+#else
 typedef struct IDirectInputDevice *LPDIRECTINPUTDEVICE;
+#endif
 struct	LiveList;
 
 class	Inst3d;

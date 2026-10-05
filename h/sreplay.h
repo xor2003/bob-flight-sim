@@ -6,7 +6,7 @@
 //DeadCode DAW 09Feb00 #ifndef SREPLAY_INCLUDED
 //DeadCode DAW 09Feb00 #pragma once
 //DeadCode DAW 09Feb00 #define SREPLAY_INCLUDED
-//DeadCode DAW 09Feb00 //#include "..\h\SREPLAY.H"
+//DeadCode DAW 09Feb00 //#include "../h/SREPLAY.H"
 //DeadCode DAW 09Feb00 
 //DeadCode DAW 09Feb00 /////////////////////////////////////////////////////////////////////////////
 //DeadCode DAW 09Feb00 // CReplay dialog

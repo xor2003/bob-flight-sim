@@ -4811,6 +4811,7 @@ void	AirStruc::ContractSag(bool forcedcontract)
 	//copy info from leader to SAG:
 	AutoMoveCodeTypeSelect separatemovecode;
 
+	bobassert(fly.expandedsag,"expandedsag NULL entering expand switch");	//RERUN: contract; silences null-deref analysis
 	switch (fly.expandedsag->movecode)
 	{
 		case	AUTO_WAIT4TIME	:		separatemovecode=AUTOSAG_WAITTAKEOFF;	break;	//CSB 27Jul00
@@ -4896,7 +4897,7 @@ void	AirStruc::ContractSag(bool forcedcontract)
 //DEADCODE JIM 14/02/00 			totalac--;
 			//COPY anim data to gi
 			gi.AnimDataMAD().IsInvisible = 0;
-			SHAPE.ACtoSAG(w, gi.GetAnimData());
+			{animptr _ad=gi.GetAnimData(); SHAPE.ACtoSAG(w, _ad);} //RERUN: GCC cannot bind rvalue to non-const ref (MSVC ext)
 
 			//make aircraft generically reusable and remove
 			secp->numactive--;
@@ -5411,7 +5412,7 @@ AirStrucPtr AirStruc::ActivateACFromSag(GroupItterator& gi)
 		//NEED TO TRANSFER THE ANIM DATA FROM gi parameter
 // .... should use real weappack num here, instead of 0!
 		SHAPE.ResetAnimData_NewShape(currac,currac->shape,0,false);		//RJS 29Aug00
-		SHAPE.SAGtoAC(gi.GetAnimData(), currac->Anim);
+		{animptr _ad=gi.GetAnimData(); SHAPE.SAGtoAC(_ad, currac->Anim);} //RERUN: GCC cannot bind rvalue to non-const ref (MSVC ext)
 
 //DeadCode RJS 29Aug00 		MinAnimData* animdata = (MinAnimData*)currac->Anim;				//CSB 9Aug00
 //DeadCode RJS 29Aug00 		animdata->IsInvisible = 0;										//CSB 9Aug00

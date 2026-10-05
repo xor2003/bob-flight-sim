@@ -71,7 +71,7 @@ http://www.simhq.com/cgi-bin/boards/cgi-bin/forumdisplay.cgi?action=topics&forum
 #include "dosdefs.h"
 #include "shapenum.g"
 #include "3dinstr.h"
-#include "..\mfc\resource.h"
+#include "../mfc/resource.h"
 #define	 MAKE_WEAPPACKS
 #include	"Weappak.h"
 

@@ -35,21 +35,71 @@
 
 #ifdef __GNUC__
 
-#define inline __INTRIN_INLINE
-__INTRIN_INLINE unsigned char _BitScanForward(unsigned long * const Index, const unsigned long Mask)
+// RERUN: MSVC <intrin.h> defines __INTRIN_INLINE; under GCC just
+// make the intrinsic shims static inline (was: #define inline __INTRIN_INLINE,
+// which replaced the keyword and broke every inline below).
+#ifdef _WIN32
+// RERUN: mingw supplies the real _BitScan* intrinsics, but its
+// _bittest*/_bittestand* use "rm" constraints - a register operand makes
+// bt wrap the index mod 32, breaking the unbounded bit-string indexing
+// BoB relies on (bt ds:[mem],reg). Shadow with memory-constrained copies.
+#include <intrin.h>
+static inline unsigned char _rowan_bittest(const long * const a, const long b)
+{
+	unsigned char retval;
+	if (__builtin_constant_p(b))
+		__asm__("bt %[b], %[a]; setb %b[retval]" : [retval] "=q" (retval) : [a] "mr" (*(a + (b / 32))), [b] "Ir" (b % 32));
+	else
+		__asm__("bt %[b], %[a]; setb %b[retval]" : [retval] "=q" (retval) : [a] "m" (*a), [b] "r" (b));
+	return retval;
+}
+static inline unsigned char _rowan_bittestandset(long * const a, const long b)
+{
+	unsigned char retval;
+	if (__builtin_constant_p(b))
+		__asm__("bts %[b], %[a]; setb %b[retval]" : [a] "+mr" (*(a + (b / 32))), [retval] "=q" (retval) : [b] "Ir" (b % 32));
+	else
+		__asm__("bts %[b], %[a]; setb %b[retval]" : [a] "+m" (*a), [retval] "=q" (retval) : [b] "r" (b));
+	return retval;
+}
+static inline unsigned char _rowan_bittestandreset(long * const a, const long b)
+{
+	unsigned char retval;
+	if (__builtin_constant_p(b))
+		__asm__("btr %[b], %[a]; setb %b[retval]" : [a] "+mr" (*(a + (b / 32))), [retval] "=q" (retval) : [b] "Ir" (b % 32));
+	else
+		__asm__("btr %[b], %[a]; setb %b[retval]" : [a] "+m" (*a), [retval] "=q" (retval) : [b] "r" (b));
+	return retval;
+}
+static inline unsigned char _rowan_bittestandcomplement(long * const a, const long b)
+{
+	unsigned char retval;
+	if (__builtin_constant_p(b))
+		__asm__("btc %[b], %[a]; setb %b[retval]" : [a] "+mr" (*(a + (b / 32))), [retval] "=q" (retval) : [b] "Ir" (b % 32));
+	else
+		__asm__("btc %[b], %[a]; setb %b[retval]" : [a] "+m" (*a), [retval] "=q" (retval) : [b] "r" (b));
+	return retval;
+}
+#define _bittest				_rowan_bittest
+#define _bittestandset		_rowan_bittestandset
+#define _bittestandreset		_rowan_bittestandreset
+#define _bittestandcomplement	_rowan_bittestandcomplement
+#else
+#define __INTRIN_INLINE static inline
+__INTRIN_INLINE unsigned char _rowan_BitScanForward(unsigned long * const Index, const unsigned long Mask)
 {
 	__asm__("bsfl %[Mask], %[Index]" : [Index] "=r" (*Index) : [Mask] "mr" (Mask));
 	return Mask ? 1 : 0;
 }
 
-__INTRIN_INLINE unsigned char _BitScanReverse(unsigned long * const Index, const unsigned long Mask)
+__INTRIN_INLINE unsigned char _rowan_BitScanReverse(unsigned long * const Index, const unsigned long Mask)
 {
 	__asm__("bsrl %[Mask], %[Index]" : [Index] "=r" (*Index) : [Mask] "mr" (Mask));
 	return Mask ? 1 : 0;
 }
 
 /* NOTE: again, the bizarre implementation follows Visual C++ */
-__INTRIN_INLINE unsigned char _bittest(const long * const a, const long b)
+__INTRIN_INLINE unsigned char _rowan_bittest(const long * const a, const long b)
 {
 	unsigned char retval;
 
@@ -62,7 +112,7 @@ __INTRIN_INLINE unsigned char _bittest(const long * const a, const long b)
 }
 
 #ifdef _M_AMD64
-__INTRIN_INLINE unsigned char _bittest64(const __int64 * const a, const __int64 b)
+__INTRIN_INLINE unsigned char _rowan_bittest64(const __int64 * const a, const __int64 b)
 {
 	unsigned char retval;
 
@@ -75,7 +125,7 @@ __INTRIN_INLINE unsigned char _bittest64(const __int64 * const a, const __int64 
 }
 #endif
 
-__INTRIN_INLINE unsigned char _bittestandcomplement(long * const a, const long b)
+__INTRIN_INLINE unsigned char _rowan_bittestandcomplement(long * const a, const long b)
 {
 	unsigned char retval;
 
@@ -87,7 +137,7 @@ __INTRIN_INLINE unsigned char _bittestandcomplement(long * const a, const long b
 	return retval;
 }
 
-__INTRIN_INLINE unsigned char _bittestandreset(long * const a, const long b)
+__INTRIN_INLINE unsigned char _rowan_bittestandreset(long * const a, const long b)
 {
 	unsigned char retval;
 
@@ -99,7 +149,7 @@ __INTRIN_INLINE unsigned char _bittestandreset(long * const a, const long b)
 	return retval;
 }
 
-__INTRIN_INLINE unsigned char _bittestandset(long * const a, const long b)
+__INTRIN_INLINE unsigned char _rowan_bittestandset(long * const a, const long b)
 {
 	unsigned char retval;
 
@@ -110,6 +160,16 @@ __INTRIN_INLINE unsigned char _bittestandset(long * const a, const long b)
 
 	return retval;
 }
+// RERUN: MSVC-name macros -> _rowan_* bodies (clang reserves these names
+// as builtins under -fms-extensions; cannot define them directly)
+#define _BitScanForward		_rowan_BitScanForward
+#define _BitScanReverse		_rowan_BitScanReverse
+#define _bittest				_rowan_bittest
+#define _bittest64			_rowan_bittest64
+#define _bittestandcomplement	_rowan_bittestandcomplement
+#define _bittestandreset		_rowan_bittestandreset
+#define _bittestandset		_rowan_bittestandset
+#endif
 #endif
 
 #pragma warning(disable:4035)
@@ -766,7 +826,11 @@ extern	ULong SHDIVUNS (ULong,UByte,ULong);
 //-----------------------------------------------------------------------------
 inline ULong SHDIVUNS (ULong num1, UByte num2, ULong num3)
 {
-	return (((unsigned __int64)num1 << num2) / num3);
+	// RERUN: was ((u64)num1 << num2) / num3 - SIGFPEs on num3==0 and is
+	// C++ UB for num2>=64 (x86 shl masks count to 5 bits). Migalley form.
+	const unsigned int safe_shift = num2 & 31;
+	const unsigned __int64 shifted = (unsigned __int64)num1 << safe_shift;
+	return num3 ? (ULong)(shifted / num3) : 0;
 /*		_asm
     {
 		push	ecx
@@ -1114,11 +1178,21 @@ inline void SETFPCW(UWord w)
 #endif
 
 #ifdef __GNUC__
+#ifdef _WIN32
+// RERUN: mingw has no fpu_control.h - use raw x87 fnstcw/fldcw (same as _FPU_*)
+typedef unsigned short fpu_control_t;
+#define _FPU_SINGLE	0x0000
+#define _FPU_DOUBLE	0x0200
+#define _FPU_EXTENDED	0x0300
+#define _FPU_GETCW(cw)	__asm__ volatile ("fnstcw %0" : "=m" (cw))
+#define _FPU_SETCW(cw)	__asm__ volatile ("fldcw %0" :: "m" (cw))
+#else
 #include <fpu_control.h>
+#endif
 inline void SETPREC(int p)
 {
  
- fpu_control_t fpu_oldcw,precision=0;
+ fpu_control_t fpu_oldcw,fpu_cw,precision=0; // RERUN: fpu_cw was undeclared
 
 if (p==0) precision=_FPU_SINGLE;
 else if (p==2) precision=_FPU_DOUBLE;
@@ -1126,20 +1200,16 @@ else if (p==3) precision=_FPU_EXTENDED;
 
  _FPU_GETCW(fpu_oldcw); // store old cw
  fpu_cw = (fpu_oldcw & ~_FPU_EXTENDED & ~_FPU_DOUBLE & ~_FPU_SINGLE) | precision;
- _FPU_SETCW(fpu_oldcw);
+ _FPU_SETCW(fpu_cw); // RERUN: was SETCW(fpu_oldcw) - never applied new precision
 
 }
 inline int GETPREC()
 {
- int p=0;
  fpu_control_t fpu_cw;
  _FPU_GETCW(fpu_cw); // store cw
-
-if (fpu_cw & _FPU_SINGLE) p=0;
-if (fpu_cw & _FPU_DOUBLE) p=2;
-if (fpu_cw & _FPU_EXTENDED) p=3;
-
-	return p;
+ // RERUN: mask checks were wrong - _FPU_EXTENDED(0x300) also matches _FPU_DOUBLE(0x200)
+ // so p was always 3. Precision = bits 8-9; extract directly (same as migalley).
+	return (fpu_cw >> 8) & 3;
 }
 
 inline UWord GETFPCW()
@@ -1151,6 +1221,7 @@ inline UWord GETFPCW()
 
 inline void SETFPCW(UWord w)
 {
+	_FPU_SETCW(w); // RERUN: was an empty body
 }
 #endif
 
@@ -1192,4 +1263,67 @@ _asm	{
 */
 //if included:
 #pragma warning(default:4800)
+
+// RERUN: GNUC bodies for functions still trapped in the commented-out
+// Watcom/MSVC blocks above. Bodies ported per migalley/H/MATHASM.H
+// (same-name functions, same asm semantics). BIT*I variants return the
+// new value; BITSET/RESET/COMP (non-I) return the previous bit.
+
+inline ULong BITRESETI(ULong value, ULong bit_index)
+{
+    return value & ~(ULong(1) << (bit_index & 31));
+}
+inline ULong BITSETI(ULong value, ULong bit_index)
+{
+    return value | (ULong(1) << (bit_index & 31));
+}
+inline bool BITTESTI(int value, ULong bit_index)
+{
+    return (value & (1 << (bit_index & 31))) != 0;
+}
+inline ULong BITCOMPI(ULong value, ULong bit_index)
+{
+    return value ^ (ULong(1) << (bit_index & 31));
+}
+inline ULong BITSCANLOWEST(ULong bits, ULong errcode = 0)
+{
+    if (bits == 0) return errcode;
+    return (ULong)__builtin_ctz(bits);
+}
+inline ULong BITSCANHIGHEST(ULong bits, ULong errcode = 0)
+{
+    if (bits == 0) return errcode;
+    return (ULong)(31 - __builtin_clz(bits));
+}
+inline ULong MULSHUNS(ULong num1, ULong num2, UByte num3)
+{
+    const uint64_t product = static_cast<uint64_t>(num1) * num2;
+    return static_cast<ULong>(product >> (num3 & 31));
+}
+inline ULong MULDIVUNS(ULong num1, ULong num2, ULong num3)
+{
+    uint64_t product = (uint64_t)num1 * num2;
+    return num3 ? (ULong)(product / num3) : 0;
+}
+inline SLong MULSHSIN(SLong a, SLong b, UByte shift)
+{
+    // shrd semantics: 64-bit signed product shifted LOGICALLY (zeros in)
+    const uint64_t product = static_cast<uint64_t>(static_cast<int64_t>(a) * b);
+    return static_cast<SLong>(product >> (shift & 31));
+}
+inline SLong MULDIVSIN(SLong num1, SLong num2, SLong num3)
+{
+    int64_t product = (int64_t)num1 * num2;
+    return num3 ? (SLong)(product / num3) : 0;
+}
+inline void repmovsd(const void* src, void* dst, int dwords)
+{
+    asm volatile(
+        "rep movsd"
+        : "+S"(src), "+D"(dst), "+c"(dwords)
+        :
+        : "memory"
+    );
+}
+
 #endif

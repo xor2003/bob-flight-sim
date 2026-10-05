@@ -98,7 +98,7 @@ http://www.simhq.com/cgi-bin/boards/cgi-bin/forumdisplay.cgi?action=topics&forum
 #include "shapenum.g"
 #include "fastmath.h"
 //DEADCODE MS 02/02/00 #include <initguid.h>
-#include "..\lib3d\lib3d.h"
+#include "../lib3d/lib3d.h"
 
 const	SWord	SHIFT_StartIndex		=	4;
 const	SWord	SHIFT_MultIndex			=	8;

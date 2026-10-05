@@ -79,6 +79,8 @@ http://www.simhq.com/cgi-bin/boards/cgi-bin/forumdisplay.cgi?action=topics&forum
 
 	#include	"DOSDefs.h"
 	#include	"myAngles.h"
+#include "mathasm.h" //RERUN for SHDIVUNS (was extern asm symbol)
+#include <cmath> //RERUN for std::sqrt
 //DeadCode DAW 15Apr96 	#include	"screen.h"
 //DeadCode DAW 19Mar96 	#include	"getset.h"
 	#include	"mymath.h"

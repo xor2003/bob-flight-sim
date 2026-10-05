@@ -75,7 +75,7 @@ http://www.simhq.com/cgi-bin/boards/cgi-bin/forumdisplay.cgi?action=topics&forum
 #include	"bfnumber.h"
 #include	"persons2.h"
 #define	QUICKQUICKQUICK
-		#include	"..\mfc\resource.h"
+		#include	"../mfc/resource.h" //RERUN: path
 		#include	"squick1.h"
 
 typedef	 QuickFields	Q;

@@ -2010,13 +2010,13 @@ void shape::dopolygon(UByte *& instr_ptr)
 	{
 		if (ptr->shiftx)
 		{
-			minx += (val * ptr->width)>>maxshift;
+			minx += (val * ptr->width)>>(maxshift&31);	//RERUN: maxshift=32 is C++ UB; x86 masks count&31
 			minx-=(rwidth/2);
 		}
 
 		if (ptr->shifty)
 		{
-			miny += (val * ptr->height)>>maxshift;
+			miny += (val * ptr->height)>>(maxshift&31);	//RERUN: ditto
 			miny-=(rheight/2);
 		}
 	}
@@ -8453,6 +8453,9 @@ void shape::docompass(UByte *& instr_ptr)
 				case PER_SEC100:
 					fcntinc = float(cntinc+animlag);
 					break;
+				default:
+					fcntinc = 0;	//RERUN: uninit on out-of-range ClockInc (anim data)
+					break;
 			}
 		}
 		else
@@ -8892,9 +8895,9 @@ void shape::docompass(UByte *& instr_ptr)
 					DOGROUP_PTR		gptr;
 					SLong			Col_NextDep = 0;
 					SLong			Col_PrevDep = 0;
-					Coords3D		pPos,nPos;
+					Coords3D		pPos={0},nPos={0};				//RERUN: uninit when only one Col_*Dep set
 					GrpMinAnimData*	gmad = (GrpMinAnimData*) mad;
-					UWord			panimoff,nanimoff;
+					UWord			panimoff=0,nanimoff=0;				//RERUN: paired with pPos/nPos
 
 
 					if (ptr->setinvisible)						//RJS 22Nov98
@@ -16508,9 +16511,9 @@ void	shape::LauncherToWorld(	itemptr	itm,
 
 				scaleback = _matrix.transform(obj_matrix,tmpx,tmpy,tmpz);
 
- 				tmpx >>= (16-scaleback);
- 				tmpy >>= (16-scaleback);
- 				tmpz >>= (16-scaleback);
+ 				tmpx >>= ((16-scaleback)&31);
+ 				tmpy >>= ((16-scaleback)&31);
+ 				tmpz >>= ((16-scaleback)&31);
  			}
 		}
 	}
@@ -17795,9 +17798,9 @@ Bool	shape::SampleSmokePnt(	UByteP		smkinfo,
 								obj_matrix);
 
 			scaleback = _matrix.transform(obj_matrix,wx,wy,wz);
-			wx >>= (16-scaleback);
-			wy >>= (16-scaleback);
-			wz >>= (16-scaleback);
+			wx >>= ((16-scaleback)&31);
+			wy >>= ((16-scaleback)&31);
+			wz >>= ((16-scaleback)&31);
 
 			wx += trailptr->lastwx;
 			wy += trailptr->lastwy;
@@ -18078,6 +18081,7 @@ SLong	shape::DrawSmokeTrail(	SWord		index,
 				if (thisdrawnobj)
 				{
 					AnimDat.depth = ptr->Depth;
+					AnimDat.frameno = 0;	//RERUN: uninit bitfield copied wholesale - vapour got random frame
 					AnimDat.drawit = 1;
 
 					AnimDataPtr = (VapAnimDatPtr) &((Obj3DPtr)thisdrawnobj)->AngR;
@@ -21387,9 +21391,9 @@ Bool	shape::SampleDustPnt(	UByteP		smkinfo,
 							obj_matrix);
 
 		scaleback = _matrix.transform(obj_matrix,wx,wy,wz);
-		wx >>= (16-scaleback);
-		wy >>= (16-scaleback);
-		wz >>= (16-scaleback);
+		wx >>= ((16-scaleback)&31);
+		wy >>= ((16-scaleback)&31);
+		wz >>= ((16-scaleback)&31);
 
 		wx += trailptr->lastwx;
 		wy += trailptr->lastwy;
@@ -22243,12 +22247,12 @@ void	shape::CollisionPlayback()
 		Coords3D		colpos_impact;
 		Coords3D		colpos_hititem;
 		Coords3D		colpos_hitgrp;
-		SLong			last_vdeltax, last_vdeltay, last_vdeltaz;//RJS 20May99
+		SLong			last_vdeltax=0, last_vdeltay=0, last_vdeltaz=0;	//RERUN: uninit first pass//RJS 20May99
 		SLong			vdeltax, vdeltay, vdeltaz;				//RJS 20May99
 		SWord			sin_ang, cos_ang;						//RJS 20May99
 		ANGLES			theHdg, thePitch;						//RJS 20May99
 		SLong			theDist;
-		SLong			dy,dh,dx,dz;							//RJS 20May99
+		SLong			dy=0,dh,dx=0,dz=0;				//RERUN: read when vdelta-unchanged path skips Intercept//RJS 20May99
 		bool			isRotated;
 		ItemPtr			lastItem = NULL;
 		MATRIX   		omat;
@@ -22431,9 +22435,9 @@ void	shape::CollisionPlayback()
 
 							scaleback = _matrix.transform(obj_matrix,posptr->X,posptr->Y,posptr->Z);
 
- 							posptr->X >>= (16-scaleback);
- 							posptr->Y >>= (16-scaleback);
- 							posptr->Z >>= (16-scaleback);
+ 							posptr->X >>= ((16-scaleback)&31);	//RERUN: scaleback UWord can exceed 16 (neg count = C++ UB; x86 masks &31)
+ 							posptr->Y >>= ((16-scaleback)&31);
+ 							posptr->Z >>= ((16-scaleback)&31);
 						}
 					}
 
@@ -22853,7 +22857,7 @@ WeapAnimData* shape::DirectWeaponLauncher(	itemptr	itm,
 		}
 	}
 
- 	LauncherToWorld(itm,(UByteP) thislaunch,thisscale,xpos,ypos,zpos,NULL);
+ 	LauncherToWorld(itm,(UByteP) thislaunch,thisscale,xpos,ypos,zpos,NULL);	// cppcheck-suppress invalidLifetime ; fiddledlauncher is function-scope, still live here
 
 	return(weapon);
 }
@@ -23570,6 +23574,7 @@ void	shape::DrawDirtTrail(	SWord		index,
 					if (thisdrawnobj)
 					{
 						AnimDat.depth = ptr->Depth;		//initial fade depth...
+					AnimDat.frameno = 0;			//RERUN: uninit bitfield copied wholesale
 						AnimDat.drawit = CalcDirtDeltas( apoint,
 														 lastpoint,
 														 radius,
@@ -23686,7 +23691,7 @@ SLong	shape::LogFuelDamage(	ItemPtr		itm,
 		UByteP				instr_ptr;
 		UWord				instruction;
 		SLong				instsize = sizeof(DOLAUNCHER) + 1;
-		SLong				tankindex;
+		SLong				tankindex = 0;				//RERUN: uninit when shape has no fuel launcher (isfuel stays true)
 		WeapAnimData*		weapptr = NULL;
 		bool				isfuel = true;
 
@@ -24733,9 +24738,9 @@ Bool	shape::ReplaySampleSmokePnt(	UByteP		smkinfo,
 								obj_matrix);
 
 			scaleback = _matrix.transform(obj_matrix,wx,wy,wz);
-			wx >>= (16-scaleback);
-			wy >>= (16-scaleback);
-			wz >>= (16-scaleback);
+			wx >>= ((16-scaleback)&31);
+			wy >>= ((16-scaleback)&31);
+			wz >>= ((16-scaleback)&31);
 
 			wx += trailptr->lastwx;
 			wy += trailptr->lastwy;
@@ -26369,6 +26374,7 @@ void	shape::GetPilotPos(ItemPtr	itm,UWord index,Coords3D& pos, SWord& relypos)
 void	shape::FakeLauncherAnim(animptr&	adptr, ShapeNum	shpno, SLong weappak)
 {
 	AircraftAnimData	fakeanim;
+	fakeanim.nolaunchers = 0;	//RERUN: InitLauncherAnim only sets it when LauncherDataSize!=0
 	animptr				fakeadptr = adptr;
 	ShapeNum			fakeshape;
 	ShapeDescPtr		sdptr = SHAPESTUFF.GetShapePtr(shpno);
@@ -26632,9 +26638,9 @@ WeapAnimData* shape::GetSuperLauncher(	itemptr		itm,
 
 					scaleback = _matrix.transform(obj_matrix,xpos,ypos,zpos);
 
-					xpos >>= (16-scaleback);
-					ypos >>= (16-scaleback);
-					zpos >>= (16-scaleback);
+					xpos >>= ((16-scaleback)&31);
+					ypos >>= ((16-scaleback)&31);
+					zpos >>= ((16-scaleback)&31);
 				}
 			}
 		}
@@ -27501,7 +27507,7 @@ void	shape::DoDrawTrail(	UByteP				instr_ptr,
 	SWord			MaxDepth = 64;
 	ImageMapNumber	theImap;
 	ImageMapNumber	theImap2;
-	SWord			minx2,miny2,maxx2,maxy2;
+	SWord			minx2=0,miny2=0,maxx2=0,maxy2=0;	//RERUN: uninit when theImap set but theImap2 unset
 	SWord			realfade = fadedepth;
 	SLong			fadetime;
 	SLong			lifegone;
@@ -28403,9 +28409,9 @@ void	shape::LauncherToWorld(ItemPtr	itm, Coords3D&	pos)
 
 			scaleback = _matrix.transform(obj_matrix,pos.X,pos.Y,pos.Z);
 
- 			pos.X >>= (16-scaleback);
- 			pos.Y >>= (16-scaleback);
- 			pos.Z >>= (16-scaleback);
+ 			pos.X >>= ((16-scaleback)&31);
+ 			pos.Y >>= ((16-scaleback)&31);
+ 			pos.Z >>= ((16-scaleback)&31);
 		}
 	}
 }
@@ -28814,6 +28820,7 @@ bool	shape::ReadReplayGroup(ItemPtr	tempitem, UByte	noInGroup)
 				break;
 			}
 
+			// cppcheck-suppress uninitvar ; ReplayRead fills on success or returns false
 			if (!_Replay.ReplayRead(UByteP(&data),sizeof(ReplayGroupInfo)))
 				return false;
 
@@ -29123,6 +29130,7 @@ void	shape::animate_shape_cockpit()
 
 //DeadCode RJS 7Nov00 	UpdateVapourCoords(Persons2::PlayerSeenAC,Persons2::PlayerSeenAC->Anim,false);
 	UpdateVapourCoords(Persons2::PlayerSeenAC,Persons2::PlayerSeenAC->Anim,true);	//RJS 7Nov00
+	object_obj3d = NULL;		//RERUN: was left pointing at dead local theObj (static member)
 }
 
 //컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
@@ -29222,9 +29230,9 @@ inline void	shape::TransformSmokePoint(const UByteP	instr_ptr, Coords3D&	pos)
 
 	UWord	scaleback = _matrix.transform(obj_matrix,wx,wy,wz);
 
-	wx >>= (16-scaleback);
-	wy >>= (16-scaleback);
-	wz >>= (16-scaleback);
+	wx >>= ((16-scaleback)&31);
+	wy >>= ((16-scaleback)&31);
+	wz >>= ((16-scaleback)&31);
 
 	pos.X = wx;
 	pos.Y = wy;
@@ -29391,7 +29399,7 @@ UByte&	animptr::operator[] (int a)
 #ifndef	NDEBUG
 	assert(size>a);												//RJS 30Nov99
 #endif
-	return UByteP(ptr)[a];
+	return UByteP(ptr)[a];	// cppcheck-suppress returnTempReference ; ref is into *ptr (anim buffer), not a temporary
 }
 
 UByte&	animptr::operator[] (SWord a)
@@ -29399,7 +29407,7 @@ UByte&	animptr::operator[] (SWord a)
 #ifndef	NDEBUG
 	assert(size>a);												//RJS 30Nov99
 #endif
-	return UByteP(ptr)[a];
+	return UByteP(ptr)[a];	// cppcheck-suppress returnTempReference ; ref is into *ptr (anim buffer), not a temporary
 }
 
 UByte&	animptr::operator[] (UWord a)
@@ -29407,7 +29415,7 @@ UByte&	animptr::operator[] (UWord a)
 #ifndef	NDEBUG
 	assert(size>a);												//RJS 30Nov99
 #endif
-	return UByteP(ptr)[a];
+	return UByteP(ptr)[a];	// cppcheck-suppress returnTempReference ; ref is into *ptr (anim buffer), not a temporary
 }
 
 UByte&	animptr::operator[] (UByte a)
@@ -29415,7 +29423,7 @@ UByte&	animptr::operator[] (UByte a)
 #ifndef	NDEBUG
 	assert(size>a);												//RJS 30Nov99
 #endif
-	return UByteP(ptr)[a];
+	return UByteP(ptr)[a];	// cppcheck-suppress returnTempReference ; ref is into *ptr (anim buffer), not a temporary
 }
 
 void	animptr::operator += (int a)

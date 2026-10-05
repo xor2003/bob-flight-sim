@@ -31,8 +31,7 @@
 class	CDumpContext;
 class	CArchive;
 
-#ifndef __GNUC__
-#ifndef _TCHAR_DEFINED
+#ifndef _TCHAR_DEFINED // RERUN: was `#ifndef __GNUC__` - local class needs TCHAR under GCC too
 typedef char TCHAR, *PTCHAR;
 typedef unsigned char TBYTE , *PTBYTE ;
 #define _TCHAR_DEFINED
@@ -53,7 +52,9 @@ typedef long LONG;
 #define CONST               const
 #endif
 
+#ifndef ROWAN_USE_MIG_CSTRING
 #define LoadString  LoadStringA
+#endif //RERUN: MigCstring provides LoadString directly
 
 typedef wchar_t WCHAR;    // wc,   16-bit UNICODE character
 
@@ -109,10 +110,13 @@ typedef char *  va_list;
 #endif
 
 
-#if 1 //(_MSC_VER > 1200)
-//#define _AFX
+#if defined(_AFX) || defined(__AFX_H__) // RERUN: was `#if 1` - forced MFC
+                                    // CString; local class (below) builds natively
 #include "stdafx.h"
 #include <afxstr.h>
+#elif defined(ROWAN_USE_MIG_CSTRING)  // RERUN: adopt the shared native CString
+// (migalley MigCstring.h: MFC-compatible API + LoadString) supplied via the
+// WIN32_COMPAT/dinput include chain; the dead local class below is skipped.
 
 #undef TRUE
 #undef FALSE
@@ -430,6 +434,5 @@ _AFX_INLINE bool AFXAPI operator>=(LPCTSTR s1, const CString& s2)
 
 #endif
 
-#endif
 #endif
 

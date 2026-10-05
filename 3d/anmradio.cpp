@@ -146,7 +146,7 @@ void	DamageChat::ExecuteRadio(	ItemPtr				itm,
 				acHitAlive = true;										//RJS 26Jun00
 		}
 
-		if (acHit->nationality != acHitter->nationality)			//RJS 25Jun99
+		if (acHit && acHit->nationality != acHitter->nationality)	//RERUN: acHit null-guarded above then derefed//RJS 25Jun99
 		{
  			buddy = acHit->FindBuddy();
 
@@ -1485,7 +1485,7 @@ void	DamageChat::PlayerSidePiledIn(AirStrucPtr	ac)
 		}
 	}
 
-	if (!ac->uniqueID.commsmove)									  //AMM 07/07/99
+	if (ac && !ac->uniqueID.commsmove)									  //AMM 07/07/99
 		ac->ai.radiosilent = TRUE;			//RJS 09Jun99
 
 #ifndef	NDEBUG
@@ -1553,7 +1553,7 @@ void	DamageChat::AlertGoHome(AirStrucPtr	killer)
 			{
 //DeadCode RJS 3Oct00 #pragma message(__HERE__ "OLDSCRIPT_ALLDISENGAGE, OLDSCRIPT_ALLGOHOME - do we have alternatives? SCRIPT_REGROUP + SCRIPT_ALLGOHOME SCRIPT_SENDEVERYBODY SCRIPT_HOMEWELLDONE")
 
-				int	theScript;
+				int	theScript = SCRIPT_REGROUP;		//RERUN: init (rnd(4) always 0-3; silences uninit analysis)
 				int	choice = Math_Lib.rnd(4);
 				switch (choice)
 				{

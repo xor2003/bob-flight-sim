@@ -996,13 +996,13 @@ void IcptExpr::	Save( BOStream& f, char *, int, EnumListNames )
 	objA.Save(f,NULL);
 	objB.Save(f,NULL);
 }
-void UIDExpr::Save(struct _iobuf *,char *,int,enum EnumListNames)		{}
-void WorldExpr::Save(struct _iobuf *,char *,int,enum EnumListNames)		{}
-void XyzExpr::Save(struct _iobuf *,char *,int,enum EnumListNames)		{}
-void GlobRefExpr::Save(struct _iobuf *,char *,int,enum EnumListNames)	{}
-void RndExpr::Save(struct _iobuf *,char *,int,enum EnumListNames)		{}
-void SelExpr::Save(struct _iobuf *,char *,int,enum EnumListNames)		{}
-void ListExpr::Save(struct _iobuf *,char *,int,enum EnumListNames)		{}
-void ListFormExpr::Save(struct _iobuf *,char *,int,enum EnumListNames)	{}
-void RotExpr::Save(struct _iobuf *,char *,int,enum EnumListNames)		{}
-void IcptExpr::Save(struct _iobuf *,char *,int,enum EnumListNames)		{}
+void UIDExpr::Save(FILE *,char *,int,EnumListNames)		{}
+void WorldExpr::Save(FILE *,char *,int,EnumListNames)		{}
+void XyzExpr::Save(FILE *,char *,int,EnumListNames)		{}
+void GlobRefExpr::Save(FILE *,char *,int,EnumListNames)	{}
+void RndExpr::Save(FILE *,char *,int,EnumListNames)		{}
+void SelExpr::Save(FILE *,char *,int,EnumListNames)		{}
+void ListExpr::Save(FILE *,char *,int,EnumListNames)		{}
+void ListFormExpr::Save(FILE *,char *,int,EnumListNames)	{}
+void RotExpr::Save(FILE *,char *,int,EnumListNames)		{}
+void IcptExpr::Save(FILE *,char *,int,EnumListNames)		{}

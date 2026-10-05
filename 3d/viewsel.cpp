@@ -1265,6 +1265,8 @@ void ViewPoint::BFViewSelect()
 
 	newviewnum.viewpanrate=(ViewPanRate )bfpanrate;
 	newviewnum.viewcuttype=(ViewCutType )bfcuttype;
+	newviewnum.viewchanged=VC_SuccessfulChange;	//RERUN: uninit -> SetViewFromNum read garbage
+	newviewnum.vieweestepped=FALSE;				//RERUN: ditto
 
 	SetViewFromNum(newviewnum);
 
@@ -1790,7 +1792,7 @@ void ViewPoint::UIResetView()
 inline ZmRtFlags operator &= (ZmRtFlags z,int i) {return z=ZmRtFlags(z & i);}
 void ViewPoint::ClearUIFlag(ZmRtFlags inp)
 {
-	uiflag &= ~(int)inp/*int(inp)*/;
+	uiflag = ZmRtFlags(uiflag & ~(int)inp)/*int(inp)*/; //RERUN: user operator&= ambiguous with GCC builtin
 }
 
 //컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴컴
@@ -5210,7 +5212,7 @@ void ViewPoint::DrawRovingCamera()
 		if (rovingData.rovingT<-8)
 			rovingData.rovingT=-8;
 	}
-	SLong delta=((1<<rovingData.rovingT)*1000)/RealDrawFrameTime();		//RJS 19Sep00
+	SLong delta=((1U<<(rovingData.rovingT&31))*1000)/RealDrawFrameTime();	//RERUN: rovingT can be -8 -> 1<<neg is C++ UB; x86 masks count&31		//RJS 19Sep00
 	if (delta)
 	{
 		SWord sin_h,cos_h;

@@ -63,10 +63,10 @@ http://www.simhq.com/cgi-bin/boards/cgi-bin/forumdisplay.cgi?action=topics&forum
 */
 
 #include "_MOVE.h"
-#include "..\MOVECODE\Automove.cpp"
-#include "..\MOVECODE\Flyinit.cpp"
-#include "..\MOVECODE\Flymodel.cpp"
-#include "..\MOVECODE\Keyfly.cpp"
-#include "..\MOVECODE\Moveall.cpp"
+#include "automove.cpp"
+#include "flyinit.cpp"
+#include "flymodel.cpp"
+#include "keyfly.cpp"
+#include "moveall.cpp"
 
-#include "..\MOVECODE\Wpaction.cpp"
+#include "wpaction.cpp"

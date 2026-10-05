@@ -118,7 +118,7 @@ enum	ImageMapNumber;
 #include "keytest.h"
 #include	"savegame.h"
 #include <stdio.h>
-#include "..\mfc\resource.h"
+#include "../mfc/resource.h"
 #include "analogue.h"
 #include "CString.h"
 #include "flymodel.h"

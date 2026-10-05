@@ -21,7 +21,8 @@
  #include <windows.h>
 #endif
 
-#ifdef __GNUC__
+#if defined(__GNUC__) && !defined(_WIN32)
+ // RERUN: Linux-only; under mingw _snprintf/_vsnprintf/_WINBASE_ are real CRT decls
  #define _WIN32_WINNT  0x0500
  #define _vsnprintf vsnprintf
  #define _snprintf snprintf
@@ -30,7 +31,7 @@
 
 #ifdef __GNUC__
 #define MYCALL
-#define MYPREFIX 
+#define MYPREFIX & //RERUN: GCC also needs & for member-fn-ptr qualification
 #else
 
  #if     _MSC_VER >= 1300
@@ -65,8 +66,21 @@ typedef _W64 long LONG_PTR;
 typedef long LONG_PTR;
 #endif
 
-//#include <stdint.h>
-//typedef int64_t __int64;
+#ifdef __GNUC__
+// RERUN: MSVC builtin __int64 -> macro so that
+// "signed/unsigned __int64" still parse as signed/unsigned long long.
+#include <stdint.h>
+#define __int64 long long
+#ifndef __fastcall
+#define __fastcall __attribute__((fastcall))
+#endif
+#ifndef _fastcall
+#define _fastcall __fastcall
+#endif
+#ifdef M_PI
+#undef M_PI
+#endif
+#endif
 
 #ifdef __BORLANDC__
 
@@ -259,7 +273,7 @@ private:
 //#ifndef NULL
 #undef NULL
 //#define	NULL	0
-const int 	NULL	= 0;
+#define	NULL	0 //RERUN: literal 0 is a null-pointer-constant incl. member pointers; const-int variable is not since C++11
 //#endif 
 
 //#define	_	[0]
@@ -288,7 +302,7 @@ typedef	enum	Bool	{BOOL_TRUE=1,BOOL_FALSE=0,BOOL_Align=255} Bool;
 #define	TRUEST	BOOL_TRUE
 #define	FALSE	BOOL_FALSE
 */
-typedef	enum	Bool	{BOOL_TRUE=1,BOOL_FALSE=0,BOOL_Align=255,TRUE=BOOL_TRUE,FALSE=BOOL_FALSE};
+enum	Bool	{BOOL_TRUE=1,BOOL_FALSE=0,BOOL_Align=255,TRUE=BOOL_TRUE,FALSE=BOOL_FALSE};
 
 //DeadCode DAW 30Jun96 enum	Bool	{TRUE=1,FALSE=0,BOOL_Align=255};
 

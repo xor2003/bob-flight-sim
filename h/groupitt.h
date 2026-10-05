@@ -31,7 +31,7 @@ DOGROUP,
 
 
 class	DeadStream;
-class	DeadStream::DeadBlockItterator;
+#include "savegame.h"					//RERUN: DeadStream::DeadBlockItterator cannot be fwd-declared outside DeadStream (GCC ext rejected by clang)
 struct ITEM_STATUS;
 struct GroupItterator
 {
