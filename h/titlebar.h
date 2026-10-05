@@ -1,6 +1,7 @@
 /*
 //{{AFX_INCLUDES()
 #include "rbutton.h"
+#include "misssub.h" // RERUN: SelectTargetMode used by value below (no forward-enum in GCC)
 //}}AFX_INCLUDES
 */
 #if !defined(AFX_TITLEBAR_H__891B54A3_4D5E_11D2_83A5_00004760763D__INCLUDED_)
@@ -14,6 +15,9 @@
 
 /////////////////////////////////////////////////////////////////////////////
 // TitleBar dialog
+// RERUN: SelectTargetMode used by value below — GCC has no forward-enum
+// fallback, so the defining header must be included (was MSVC-as-int).
+#include "misssub.h"
 enum	SelectTargetMode;
 class TitleBar : public CRToolBar
 {

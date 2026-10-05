@@ -67,4 +67,3 @@ public:
 };
 
 #endif // !defined(AFX_ROWTASKS_H__C2978741_E0E8_11D1_9FD6_D0EC00C10000__INCLUDED_)
-

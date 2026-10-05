@@ -79,12 +79,12 @@ public:
 	void	CloseToolChildren(RDialog* skipthis=NULL);
 	void	UpdateToolbars(bool	hideall);
 
-//DeadCode RJS 27Jul00 	void CMainFrame::WinHelp(DWORD dwData, UINT nCmd);
+//DeadCode RJS 27Jul00 	void WinHelp(DWORD dwData, UINT nCmd);
 
 	CSystemBox* m_wndSystemBox;
 #endif
 
-	void CMainFrame::WinHelp(DWORD dwData, UINT nCmd);
+	void WinHelp(DWORD dwData, UINT nCmd);
 
 	int m_doIExist;
 //DEADCODE DAW 07/05/99 	CResizableDlgBar m_wndDialogBar;

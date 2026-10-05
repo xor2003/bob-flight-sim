@@ -33,6 +33,7 @@ extern	DebugLineStats	debugboxmem;
 
 /////////////////////////////////////////////////////////////////////////////
 // CMapDlg dialog
+#include "uiicons.h" // RERUN: IconsUI used by value below (no forward-enum in GCC)
 enum	IconsUI;
 class CMapDlg : public CDialog
 {

@@ -31,4 +31,3 @@ public:
 public:
 	// method 'Render' not emitted because of invalid return type or parameter type
 };
-

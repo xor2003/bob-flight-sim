@@ -106,29 +106,10 @@ class	CRJoyCfg;
 class	CRStatic;
 class	CRSpinBut;
 
-class DlgItem:public CWnd
-{
-public:
-	operator COleFont*()	{return	(COleFont*)this;}
-	operator CPicture*()	{return	(CPicture*)this;}
-	operator CRButton*()	{return	(CRButton*)this;}
-	operator CRComboExtra*(){return	(CRComboExtra*)this;}
-	operator CREdit*()		{return	(CREdit*)this;}
-	operator CREditBt*()	{return	(CREditBt*)this;}
-	operator CREdtBt*()		{return	(CREdtBt*)this;}
-	operator CRSpltBar*()	{return	(CRSpltBar*)this;}
-	operator CRTabs*()		{return	(CRTabs*)this;}
-	operator CRCombo*()		{return	(CRCombo*)this;}
-	operator CRListBox*()	{return	(CRListBox*)this;}
-	operator CRRadio*()		{return	(CRRadio*)this;}
-	operator CRJoyCfg*()	{return	(CRJoyCfg*)this;}
-	operator CRStatic*()	{return	(CRStatic*)this;}
-	operator CRSpinBut*()	{return	(CRSpinBut*)this;}
-//	operator *()		{return	(*)this;}
-//	operator *()		{return	(*)this;}
-
-
-};
+// RERUN port: class DlgItem moved to the sibling port's DLGITEM.H
+// (identical body plus DECLARE_DYNAMIC) — it now underpins every
+// CWnd-native control; superseded here to avoid a redefinition.
+#include "DLGITEM.H"
 char*	trunc(char* s,size_t l);
 
 

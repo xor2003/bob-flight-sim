@@ -6,6 +6,10 @@
 #endif // _MSC_VER >= 1000
 // RDialog.h : header file
 //
+// RERUN port: globdefs needs the compat layer's CWnd/CDialog + msg types
+// first; rcombox.h is a real header kept as-is.
+#include "WIN32_COMPAT.H"
+#include "MFC_stub.h"
 #include "globdefs.h"
 #include "rcombox.h"
 
