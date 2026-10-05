@@ -1222,7 +1222,7 @@ ULong MathLib::distance3d(SLong ddx, SLong dy, SLong dz)
 		}
 		return	ddx;
 		*/
-	return sqrt((double)ddx * (double)ddx + (double)dy * (double)dy + (double)dz * (double)dz);
+	return (ULong)llround(sqrt((double)ddx * (double)ddx + (double)dy * (double)dy + (double)dz * (double)dz));	//RERUN: FISTP rounds-to-nearest; bare sqrt truncated (mig parity)
 
 
 /*	SLong	absdx,absdy,absdz,temp;
