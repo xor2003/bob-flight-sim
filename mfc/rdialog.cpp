@@ -81,8 +81,12 @@ http://www.simhq.com/cgi-bin/boards/cgi-bin/forumdisplay.cgi?action=topics&forum
 #include "3dcode.h"
 #include "listbx.h"
 #include "rscrlbar.h"
-#include "..\rlistbox\rlistbxc.h"
-#include "..\rbutton\rbuttonc.h"
+#include "rdemptyp.h"
+#include "rdemptyd.h"
+// RERUN port: OCX ctl headers removed (runtime not migrated) - the ported
+// CWnd-native controls come via the forwarded h/r*.h headers in stdafx;
+// their FireEvent dispids (Select=1, Clicked=1, DoubleSelect=2) are used
+// directly where the old code named CRListBoxCtrl/CRButtonCtrl constants.
 
 #ifdef _DEBUG
 //#define new DEBUG_NEW
@@ -388,7 +392,7 @@ RDialog*	RDialog::MakeParentDialog(CRect& dialsize,RDialog* parent,DialBox* tree
 	main->dragstate=DRAG_DIALOG;
 	dial->dragstate=DRAG_NO;
 	dial->AddChildren(tree->diallist);
-	dial->MoveWindow(&dial->viewsize);		//IDC_BUTTON1
+	dial->MoveWindow(dial->viewsize);		//IDC_BUTTON1
 
 	if (cachedlocation>=0 && Save_Data.dialposmem[cachedlocation].l==-0x8000)
 	{
@@ -431,7 +435,7 @@ RDialog*	RDialog::MakeParentDialog(CRect& dialsize,RDialog* parent,DialBox* tree
 	main->SetMaxSize(CRect(0,0,main->viewsize.Width(),main->viewsize.Height()));
 //	dial->SetMinSize(CRect(0,0,main->viewsize.Width(),main->viewsize.Height()));
 //	dial->SetMaxSize(CRect(0,0,main->viewsize.Width(),main->viewsize.Height()));
-	main->MoveWindow(&main->viewsize);
+	main->MoveWindow(main->viewsize);
 	// check if its the top sheet.
 /*	dial->m_systemopen.Create(">",BS_PUSHBUTTON | WS_CHILD | WS_VISIBLE | BS_BITMAP,
 		CRect(0,0,20,20),dial,2000);
@@ -626,7 +630,7 @@ RDialog*	RDialog::AddChildren(const DialBox*const* diallist,int X2flag,CRect& re
 		{
 			dial->homesize=CRect(0,0,0,0);
 		}
-		dial->MoveWindow(&dial->viewsize);		//IDC_BUTTON1
+		dial->MoveWindow(dial->viewsize);		//IDC_BUTTON1
 		CRect tempviewsize=dial->viewsize;
 //DeadCode JIM 10Jun99 		dial->m_scalingfactor=(float)fontdpi/96;
 //DeadCode JIM 10Jun99 		if (X2flag)
@@ -745,7 +749,7 @@ void	RDialog::AddChildren(const DialBox*const* diallist,DialMake::ChildType chil
 		{
 			dial->homesize=CRect(0,0,0,0);
 		}
-		dial->MoveWindow(&dial->viewsize);		//IDC_BUTTON1
+		dial->MoveWindow(dial->viewsize);		//IDC_BUTTON1
 		CRect tempviewsize=dial->viewsize;
 		// scale the dialog if necessary due to font size change
 //DeadCode JIM 10Jun99 		dial->m_scalingfactor=(float)fontdpi/96;
@@ -948,7 +952,7 @@ void RDialog::AttachRelevantSplitterBars()
 	CRect dialRect;
 	CRect splitterRect;
 	GetClientRect(dialRect);
-	ClientToScreen(dialRect);
+	ClientToScreen(&dialRect);
 	seperation=INT_MAX;
 	splitter=NULL;
 	if(edges.r&EDGE::ACTIONS_SPLITTER)
@@ -1337,7 +1341,7 @@ void RDialog::DoPaint(CDC* pDC)
 			pData+=pFile->bfOffBits;
 			// check if any of the parents have the same artwork then calculate an offset
 			long offsets=OnGetXYOffset();
-			SetDIBitsToDevice(pDC->m_hDC,short(offsets & 0x0000FFFF),short((offsets & 0xFFFF0000)>>16),pInfo->bmiHeader.biWidth, pInfo->bmiHeader.biHeight,
+			pDC->SetDIBitsToDevice(short(offsets & 0x0000FFFF),short((offsets & 0xFFFF0000)>>16),pInfo->bmiHeader.biWidth, pInfo->bmiHeader.biHeight,
 				0,0,0,pInfo->bmiHeader.biHeight,pData,pInfo,DIB_RGB_COLORS);
 
 //DEADCODE JIM 19/05/99 //test wipe...
@@ -1497,7 +1501,7 @@ void RDialog::OnMouseMove(UINT nFlags, CPoint p)
 			if (homesize.Height()+currscrh <= viewsize.Height()) dy=0;
 			if (homesize.Width()+currscrw <= viewsize.Width()) dx=0;
 			TRACE1("Scrolling %d\n",m_hWnd);
-		    ::SetCursor(AfxGetApp()->LoadStandardCursor(IDC_SIZEALL));
+		    ::SetCursor(nullptr /* RERUN AfxGetApp()->LoadStandardCursor(IDC_SIZEALL)*/);
 			homesize.top-=dy;
 			homesize.bottom-=dy;
 			homesize.left-=dx;
@@ -1558,7 +1562,7 @@ void RDialog::OnMouseMove(UINT nFlags, CPoint p)
 				}
 			}
 //			TRACE("Size dx %d,dy %d\n",viewsize.right,viewsize.bottom);
-			parent->MoveWindow(&viewsize);
+			parent->MoveWindow(viewsize);
 		}
 	}
 
@@ -1581,34 +1585,22 @@ void RDialog::OnLButtonDown(UINT nFlags, CPoint p)
 				//In principle, the list box may be a combo box or spin button
 				//				the button may be a static or editbutton
 				//
-				int ctrlid,command,numparams=0,param1=0,param2=0;
+				//RERUN port: the OCX dispid fires directly on the control -
+				//compat FireEvent walks this dialog's event-sink map the same
+				//way the VARIANT/DISPPARAMS OnCmdMsg(CN_EVENT) routing did.
+				int param1=0,param2=0;
 				if (polylist.list)
 				{
-					ctrlid=polylist.list->GetDlgCtrlID();
-					command=CRListBoxCtrl::eventidSelect;
-					numparams=2;
 					if (pl->event<=0)
 						param1=-pl->event;
 					else
 						param2=pl->event;
+					polylist.list->FireEvent(1,param1,param2);	//Select(row,col)
 				}
 				else //if (pl->button)
 				{	assert (pl->button);
-					ctrlid=pl->button->GetDlgCtrlID();
-					command=CRButtonCtrl::eventidClicked;
+					pl->button->FireEvent(1,(long)pl->button->GetDlgCtrlID());	//Clicked(id)
 				}
-				//launch the message
-				VARIANT Arg[5]={{0}};
-				Arg[0].lVal=param1;
-				Arg[1].lVal=param2;
-				Arg[0].vt=Arg[1].vt=Arg[2].vt=Arg[4].vt=3;
-				DISPPARAMS	dispparams={0};
-				dispparams.cArgs=numparams;
-				dispparams.rgvarg = Arg;
-				EXCEPINFO	e={0};
-				UINT	i=0;
-				AFX_EVENT event(AFX_EVENT::event,command,&dispparams,&e,&i);
-				OnCmdMsg(ctrlid,CN_EVENT,&event,NULL);
 				return;
 			}
 		}
@@ -1636,7 +1628,7 @@ void RDialog::OnLButtonDown(UINT nFlags, CPoint p)
 				else if (newparent->viewsize.Width()<newparent->homesize.Width() || newparent->viewsize.Height()<newparent->homesize.Height())
 				{
 					newparent->dragstate=DRAG_SCROLL;
-				    ::SetCursor(AfxGetApp()->LoadStandardCursor(IDC_SIZEALL));
+				    ::SetCursor(nullptr /* RERUN AfxGetApp()->LoadStandardCursor(IDC_SIZEALL)*/);
 					break;
 				}
 				else newparent=newparent->parent;
@@ -1645,16 +1637,16 @@ void RDialog::OnLButtonDown(UINT nFlags, CPoint p)
 			CRect rect;
 			CRect newparentrect;
 			GetClientRect(rect);
-			ClientToScreen(rect);
+			ClientToScreen(&rect);
 			newparent->GetClientRect(newparentrect);
-			newparent->ClientToScreen(newparentrect);
+			newparent->ClientToScreen(&newparentrect);
 			newparent->lastdown=p-newparentrect.TopLeft()+rect.TopLeft();
 		}
 		else
 		{
 			ds=DRAG_SCROLL;
 			// change to a hand using OEM?
-		    ::SetCursor(AfxGetApp()->LoadStandardCursor(IDC_SIZEALL));
+		    ::SetCursor(nullptr /* RERUN AfxGetApp()->LoadStandardCursor(IDC_SIZEALL)*/);
 	//	    ::SetCursor(AfxGetApp()->LoadOEMCursor(OIC_HAND));
 		}
 	}
@@ -1833,7 +1825,7 @@ void RDialog::OnSize(UINT t, int w, int h)
 				if (!m_pVertScrollBar)
 				{
 					m_pVertScrollBar=new CRScrlBar;
-					m_pVertScrollBar->Create(NULL, WS_VISIBLE, CRect(-1,-1,-1,-1), parent, IDJ_VERT_SCROLLBAR);
+					m_pVertScrollBar->Create(NULL, "", WS_CHILD | WS_VISIBLE, CRect(-1,-1,-1,-1), parent, IDJ_VERT_SCROLLBAR);
 					m_pVertScrollBar->SetParentPointer((long)this->m_hWnd);
 					m_pVertScrollBar->SetUseMessagesInsteadOfEvents(TRUE);
 				}
@@ -1858,7 +1850,7 @@ void RDialog::OnSize(UINT t, int w, int h)
 				if (!m_pHorzScrollBar)
 				{
 					m_pHorzScrollBar=new CRScrlBar;
-					m_pHorzScrollBar->Create(NULL, WS_VISIBLE, CRect(-1,-1,-1,-1), parent, IDJ_HORZ_SCROLLBAR);
+					m_pHorzScrollBar->Create(NULL, "", WS_CHILD | WS_VISIBLE, CRect(-1,-1,-1,-1), parent, IDJ_HORZ_SCROLLBAR);
 					m_pHorzScrollBar->SetHorzAlign(TRUE);
 					m_pHorzScrollBar->SetParentPointer((long)this->m_hWnd);
 					m_pHorzScrollBar->SetUseMessagesInsteadOfEvents(TRUE);
@@ -1938,7 +1930,7 @@ void RDialog::OnSize(UINT t, int w, int h)
 		CRect rect2;
 		GetWindowRect(rect2);
 		rect=rect-rect2.TopLeft();
-		child->MoveWindow(&cviewsize);
+		child->MoveWindow(cviewsize);
 	}
 	UpdateTitle();
 	CRTabs* tabcontrol;
@@ -2044,7 +2036,7 @@ long RDialog::OnGetXYOffset()
 	CRect rect;
 	GetClientRect(rect);
 	CRect windowrect=rect;
-	ClientToScreen(windowrect);
+	ClientToScreen(&windowrect);
 	RDialog* newparent=this;
 	short offsetx=0;
 	short offsety=0;
@@ -2054,7 +2046,7 @@ long RDialog::OnGetXYOffset()
 		{
 			CRect parentrect;
 			newparent->parent->GetClientRect(parentrect);
-			newparent->parent->ClientToScreen(parentrect);
+			newparent->parent->ClientToScreen(&parentrect);
 			offsetx=parentrect.left-windowrect.left;
 			offsety=parentrect.top-windowrect.top;
 		}
@@ -2687,7 +2679,7 @@ void RDialog::ScaleDialog(float factor)
 		pControl=GetTopWindow();
 			Invalidate();
 		GetClientRect(parentrect);
-		ClientToScreen(parentrect);
+		ClientToScreen(&parentrect);
 		while (pControl)
 		{
 			// find coords relative to parent window...
@@ -2717,7 +2709,7 @@ void RDialog::ScaleDialog(float factor)
 		homesize.bottom=	homesize.top+	ScaleTranslate(homesize.Height(),true);
 		GetWindowRect(rect);
 		GetParent()->GetClientRect(parentrect);
-		GetParent()->ClientToScreen(parentrect);
+		GetParent()->ClientToScreen(&parentrect);
 
 		rect-=parentrect.TopLeft();
 		rect.right=		rect.left+ScaleTranslate(rect.Width(),false);
@@ -2736,7 +2728,7 @@ void RDialog::ScaleDialog(float factor)
 		pControl=GetTopWindow();
 			Invalidate();
 		GetClientRect(parentrect);
-		ClientToScreen(parentrect);
+		ClientToScreen(&parentrect);
 		while (pControl)
 		{
 			// find coords relative to parent window...
@@ -2762,7 +2754,7 @@ void RDialog::ScaleDialog(float factor)
 		// size the actual dialog
 		GetWindowRect(rect);
 		GetParent()->GetClientRect(parentrect);
-		GetParent()->ClientToScreen(parentrect);
+		GetParent()->ClientToScreen(&parentrect);
 		rect-=parentrect.TopLeft();
 		MoveWindow(rect.left,rect.top,rect.Width()*divfact,rect.Width()*divfact);
 
@@ -2776,7 +2768,7 @@ void RDialog::ScaleDialog(float factor)
 		CRect rect,parentrect;
 		GetWindowRect(rect);
 		GetParent()->GetClientRect(parentrect);
-		GetParent()->ClientToScreen(parentrect);
+		GetParent()->ClientToScreen(&parentrect);
 
 		rect-=parentrect.TopLeft();
 		MoveWindow(rect.left,rect.top,rect.Width(),rect.Height());
