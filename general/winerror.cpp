@@ -247,7 +247,7 @@ Error& Error::SayAndQuit(const char *fmt, ...)
 	if (MessageBox(NULL,exit_string,"Error",MODE)
 			==IDRETRY)
 	{
-		_asm {int 3};
+		INT3;
 		exit_string[0] = '\0';
 //		if (Hell_Freezes_Over)
 			return *this;

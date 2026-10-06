@@ -320,3 +320,9 @@ BOOL RMdlDlg::OnEraseBkgnd(CDC* pDC)
 {
 	return TRUE;
 }
+
+//RERUN: declared afx_msg, never defined - forward to base (see migview.cpp).
+LRESULT RMdlDlg::OnCommandHelp(WPARAM wParam, LPARAM lParam)
+{
+	return CDialog::OnCommandHelp(wParam, lParam);
+}

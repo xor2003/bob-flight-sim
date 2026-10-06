@@ -3984,3 +3984,16 @@ LRESULT CMIGView::DefWindowProc(UINT message, WPARAM wParam, LPARAM lParam)
 //deadcode JIM 18/06/01		}
 	return rv;
 }
+
+//RERUN: afx_msg decls never defined in the port source; our compat MFC
+//makes them virtual overrides, so the vtable needs a body. Forward to the
+//base impls (message-map behavior identical).
+BOOL CMIGView::OnSetCursor(CWnd* pWnd, UINT nHitTest, UINT message)
+{
+	return CView::OnSetCursor(pWnd, nHitTest, message);
+}
+
+LRESULT CMIGView::OnCommandHelp(WPARAM wParam, LPARAM lParam)
+{
+	return CView::OnCommandHelp(wParam, lParam);
+}

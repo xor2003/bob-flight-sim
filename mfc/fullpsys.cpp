@@ -485,6 +485,10 @@ void RFullPanelDial::LaunchScreen(FullScreen * pfullscreen)
 		closedsmack=true;
 //DEADCODE RDH 18/05/00 		ReleaseCapture();
 	}
+	else
+		ReleaseCapture();	//x0r LaunchSmacker takes capture unconditionally;
+						// when DirectShow never created pivw (no video
+						// backend) CloseVideo never ran to release it
 	polylist.Clear();
 	pdial[0]=pdial[1]=pdial[2]=NULL;
 	Invalidate();

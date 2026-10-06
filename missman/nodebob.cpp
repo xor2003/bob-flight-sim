@@ -6599,12 +6599,8 @@ PlaneTypeSelect	Squadron::AcType()
 {
 	SUBCALL(AcType())
 }
-static CString	LoadResString(int resnum)
-{
-	CString s;
-	s.LoadString(resnum);
-	return s;
-};
+//RERUN: local LoadResString removed - rdialog.h's inline is identical
+//(MSVC tolerated a static hiding it; GCC treats it as a redefinition).
 
 CString Squadron::CallName()
 {

@@ -308,7 +308,7 @@ void CreatePointFont(CDC* pdc,int ind, int point,Fonts fontname,int flags,int ch
 		EnumFontFamiliesEx(*pdc,&testset,EnumFontFamExProc,(long)&gotit,0);
 		if (gotit)
 			break;
-		testnames=nextname+1;
+		testnames=nextname?nextname+1:NULL;
 	};
 	Fontnames[fontname]=testnames;
 	const char* name=testnames;

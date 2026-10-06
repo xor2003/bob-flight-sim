@@ -23,6 +23,8 @@
 #include	<fstream>
 #include	<stdio.h>
 #include	<string.h>
+#include	"io_compat.h"
+#include	<string>
 //using namespace std;
 using std::ifstream;
 using std::ofstream;
@@ -33,7 +35,7 @@ using std::ios;
 class	BIStream:public	ifstream
 {
 public:
-CON	BIStream(char* fname): ifstream()	{open(fname,ios::in|ios::binary);}
+CON	BIStream(char* fname): ifstream()	{std::string _rp=resolve_ci_path(fname); open(_rp.empty()?fname:_rp.c_str(),ios::in|ios::binary);}
     
     BIStream &operator >> (           char * __b )	{return (read(__b,strlen(__b)));}
     BIStream &operator >> (           char & __b )	{return (read(&__b));}
@@ -69,9 +71,10 @@ public:
 
 CON	BOStream(char* fname,Bool blockoverwrite=FALSE):ofstream()
 	{
+		std::string _rp=resolve_ci_path(fname); const char* _fn=_rp.empty()?fname:_rp.c_str();
 		if(blockoverwrite)
 		{
-		open(fname, std::ios::in | std::ios::binary);
+		open(_fn, std::ios::in | std::ios::binary);
 
 if (this)
 {
@@ -80,13 +83,13 @@ if (this)
 else
 {
     close();
-    open(fname,ios::out | ios::binary);
+    open(_fn,ios::out | ios::binary);
 }
 		}
 		
 		else
 
-	    open(fname,ios::out | ios::binary |
+	    open(_fn,ios::out | ios::binary |
 			ios::trunc);
 				}
 

@@ -263,14 +263,17 @@ BIStream& operator	>>	(BIStream& bis,SaveData& savedata)
 		char buffer[180];
 		char b=-1;
 		int i;
-		for ( i=0;b;buffer[i++]=b)
+		for ( i=0;b&&i<(int)sizeof(buffer)-1;buffer[i++]=b)
 			bis>>b;
+		buffer[i]=0;
 		savedata.lastsavegame=buffer;
-		for (b=-1,i=0;b;buffer[i++]=b)
+		for (b=-1,i=0;b&&i<(int)sizeof(buffer)-1;buffer[i++]=b)
 			bis>>b;
+		buffer[i]=0;
 		savedata.lastreplayname=buffer;
-		for (b=-1,i=0;b;buffer[i++]=b)
+		for (b=-1,i=0;b&&i<(int)sizeof(buffer)-1;buffer[i++]=b)
 			bis>>b;
+		buffer[i]=0;
 		savedata.lastpackname=buffer;
 		bis>>_Analogue;
 
