@@ -882,12 +882,14 @@ extern	ULong SHDIVSIN (SLong,UByte,ULong);
 //-----------------------------------------------------------------------------
 inline SLong SHDIVSIN (SLong num1,UByte num2,ULong num3)
 {
-	//RERUN: shipped asm: eax=num1<<cl truncates to 32 bits, edx=num1>>(32-cl)
-	//sign-extends -> dividend = sext64(trunc32(num1<<num2)); idiv num3 is a
-	//SIGNED 32-bit divisor (sin/cos go negative). 64-bit-shift + unsigned
-	//divisor both diverged from shipped.
-	const int32_t lo = (int32_t)((uint32_t)num1 << (num2 & 31));
-	return num3 ? (SLong)((int64_t)lo / (int32_t)num3) : 0;
+	//RERUN: shipped asm dividend is edx:eax = num1 * 2^num2, a full signed
+	//64-bit product: `mov edx,eax` copies num1 BEFORE `shl eax,cl`, then
+	//`sar edx,32-cl` supplies the high dword -- the earlier "trunc32 then
+	//sign-extend" reading dropped high bits (negative range2d/Range for
+	//|num1|>=2^17; same fix as migalley H/MATHASM.H). idiv num3 is a
+	//SIGNED 32-bit divisor (sin/cos go negative). Zero-guard retained
+	//(shipped would #DE).
+	return num3 ? (SLong)(((int64_t)num1 << (num2 & 31)) / (int32_t)num3) : 0;
 /*    _asm
     {
 		push	ecx
