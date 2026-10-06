@@ -114,7 +114,7 @@ enum SFMANINTERFACEID {
 //  D A T A   S T R U C T U R E S   A N D   E N U M E R A T I O N   T A B L E S  //
 ///////////////////////////////////////////////////////////////////////////////////
 
-#pragma pack(2)
+#pragma pack(push,2)
 
 /////  E N U M  /////
 
@@ -192,7 +192,7 @@ typedef struct {
     CHAR    m_DevMgrEntry[20];  /* Entry point inside the Device Manager DLL*/
 } CSFCapsObject , *PSFCAPSOBJECT ;
 
-#pragma pack() 
+#pragma pack(pop) 
 
 /////  D E F I N E S  ///////////////////////////////////////////////////////
 

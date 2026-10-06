@@ -18,7 +18,7 @@
 #define DIRECT3D_VERSION         0x0700
 #endif
 
-#pragma pack(4)
+#pragma pack(push,4)
 
 /* Description of capabilities of transform */
 
@@ -587,7 +587,7 @@ typedef struct _D3DDEVINFO_TEXTURING {
 } D3DDEVINFO_TEXTURING, *LPD3DDEVINFO_TEXTURING;
 #endif /* DIRECT3D_VERSION >= 0x0700 */
 
-#pragma pack()
+#pragma pack(pop)
 
 #endif /* _D3DCAPS_H_ */
 

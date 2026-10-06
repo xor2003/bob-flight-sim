@@ -20,7 +20,7 @@
 #endif
 
 #pragma warning(disable:4201) // anonymous unions warning
-#pragma pack(4)
+#pragma pack(push,4)
 
 
 /* D3DVALUE is the fundamental Direct3D fractional data type */
@@ -1809,7 +1809,7 @@ typedef enum _D3DTEXTURETRANSFORMFLAGS {
 
 #endif /* DIRECT3D_VERSION >= 0x0700 */
 
-#pragma pack()
+#pragma pack(pop)
 #pragma warning(default:4201)
 
 #endif /* _D3DTYPES_H_ */
