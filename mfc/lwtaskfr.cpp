@@ -69,6 +69,7 @@ http://www.simhq.com/cgi-bin/boards/cgi-bin/forumdisplay.cgi?action=topics&forum
 #include "bob.h"
 
 #include "LWTaskFr.h"
+#include "package.h"
 
 #ifdef _DEBUG
 //#define new DEBUG_NEW
@@ -534,7 +535,7 @@ void LWTaskFighter::OnSelectRlistboxctrl1(long row, long column)
 //DeadCode JIM 26Sep00 				TitleBarPtr().OpenSelTrg(FindSquad(row-1), tab, unitdisplaylevel, false);
 		}
 		pk.ReShareSecondaries();												//JIM 28Aug00
-		AttackMethodField	am=pk.ScanAttackMethods();
+		Profile::AttackMethodField	am=pk.ScanAttackMethods();
 		pk.ReorderPackage(am);
 		pk.CalcRoutePositionsAndTime(pk.primarytargetETA,false);
 		Todays_Packages.SetTaskData();

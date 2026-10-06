@@ -71,6 +71,7 @@ http://www.simhq.com/cgi-bin/boards/cgi-bin/forumdisplay.cgi?action=topics&forum
 #include "package.h"
 #include "squick1.h"
 #include "winmove.h"
+#include "comms.h"										// unity parent supplied this (H2HPlayerInfo/SLOTPOSPACK)
 
 #ifdef _DEBUG
 //#define new DEBUG_NEW

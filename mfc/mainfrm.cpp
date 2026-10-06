@@ -127,7 +127,7 @@ BEGIN_MESSAGE_MAP(CMainFrame, CFrameWnd)
 	// Global help commands
 //	ON_COMMAND(ID_HELP_FINDER, CFrameWnd::OnHelpFinder)
 //	ON_COMMAND(ID_HELP, CFrameWnd::OnHelp)
-	ON_COMMAND(ID_CONTEXT_HELP, CFrameWnd::OnContextHelp)
+	ON_COMMAND(ID_CONTEXT_HELP, OnContextHelp)
 	ON_COMMAND(ID_DEFAULT_HELP, OnHelpFinder)
 	ON_MESSAGE( WM_COMMANDHELP,OnCommandHelp)
 

@@ -199,7 +199,7 @@ int RDialog::DoModal()
 
 ///////////////////////////////////////////////////////////////////////
 //Initialisation
-RDialog*	RDialog::MakeParentDialog(CRect& dialsize,RDialog* parent,DialBox* tree)
+RDialog*	RDialog::MakeParentDialog(CRect dialsize,RDialog* parent,const DialBox* tree)
 {//STATIC
 	int	dialxposflag=0,dialyposflag=0;
 	int	cachedlocation=-1;

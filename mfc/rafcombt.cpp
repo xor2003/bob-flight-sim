@@ -71,6 +71,7 @@ http://www.simhq.com/cgi-bin/boards/cgi-bin/forumdisplay.cgi?action=topics&forum
 #include "mytime.h"
 #include	"rchatter.h"						//RJS 18May00
 #include "winmove.h"
+#include "sqddiary.h"									// unity parent supplied this (Diary/SquadronBase)
 
 
 #ifdef _DEBUG

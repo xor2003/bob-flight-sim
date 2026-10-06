@@ -68,96 +68,11 @@ http://www.simhq.com/cgi-bin/boards/cgi-bin/forumdisplay.cgi?action=topics&forum
 //  Microsoft Visual C++, your modifications will be overwritten.
 
 
-#include "stdafx.h"
-#include "redtbt.h"
-
-/////////////////////////////////////////////////////////////////////////////
-// CREdtBt
-
-IMPLEMENT_DYNCREATE(CREdtBt, CWnd)
-
-/////////////////////////////////////////////////////////////////////////////
-// CREdtBt properties
-
-OLE_COLOR CREdtBt::GetForeColor()
-{
-	OLE_COLOR result;
-	GetProperty(DISPID_FORECOLOR, VT_I4, (void*)&result);
-	return result;
-}
-
-void CREdtBt::SetForeColor(OLE_COLOR propVal)
-{
-	SetProperty(DISPID_FORECOLOR, VT_I4, propVal);
-}
-
-CString CREdtBt::GetCaption()
-{
-	CString result;
-	GetProperty(DISPID_CAPTION, VT_BSTR, (void*)&result);
-	return result;
-}
-
-void CREdtBt::SetCaption(LPCTSTR propVal)
-{
-	SetProperty(DISPID_CAPTION, VT_BSTR, propVal);
-}
-
-long CREdtBt::GetFontNum()
-{
-	long result;
-	GetProperty(0x1, VT_I4, (void*)&result);
-	return result;
-}
-
-void CREdtBt::SetFontNum(long propVal)
-{
-	SetProperty(0x1, VT_I4, propVal);
-}
-
-long CREdtBt::GetDragAndDropID()
-{
-	long result;
-	GetProperty(0x2, VT_I4, (void*)&result);
-	return result;
-}
-
-void CREdtBt::SetDragAndDropID(long propVal)
-{
-	SetProperty(0x2, VT_I4, propVal);
-}
-
-OLE_COLOR CREdtBt::GetBackColor()
-{
-	OLE_COLOR result;
-	GetProperty(DISPID_BACKCOLOR, VT_I4, (void*)&result);
-	return result;
-}
-
-void CREdtBt::SetBackColor(OLE_COLOR propVal)
-{
-	SetProperty(DISPID_BACKCOLOR, VT_I4, propVal);
-}
-
-long CREdtBt::GetShadow()
-{
-	long result;
-	GetProperty(0x3, VT_I4, (void*)&result);
-	return result;
-}
-
-void CREdtBt::SetShadow(long propVal)
-{
-	SetProperty(0x3, VT_I4, propVal);
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// CREdtBt operations
-
-void CREdtBt::SetPictureFileNum(long picture)
-{
-	static BYTE parms[] =
-		VTS_I4;
-	InvokeHelper(0x4, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 picture);
-}
+// PORT NOTE (T118): This file contained a Microsoft Visual C++
+// machine-generated IDispatch wrapper ("NOTE: Do not modify the contents
+// of this file") implementing the OLE/OCX control property plumbing
+// (GetProperty/SetProperty/InvokeHelper). The compat layer has no OLE;
+// the real ported widget implementation (migalley MFC layer, linked via
+// the shared widget libs) supersedes it entirely. The body is removed as
+// dead code; the file remains a valid empty TU for the _*.cpp unity
+// amalgamations that #include it.

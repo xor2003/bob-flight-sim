@@ -134,16 +134,19 @@ BOOL CCredits::OnInitDialog()
 		memsize=GlobalSize(memhandle);
 		memptr=LockResource(memhandle);
 		ULong* search=(ULong*)memptr;
-		while (*search!=0xFEEF04BD)
+		while (search && *search!=0xFEEF04BD)	//PORT: no version block in native build
 			search++;
-		VS_FIXEDFILEINFO* info=(VS_FIXEDFILEINFO*)search;
 		char	version[]="V 0.00@";
+		if (search)
+		{
+		VS_FIXEDFILEINFO* info=(VS_FIXEDFILEINFO*)search;
 		version[2]+=info->dwProductVersionMS>>16;
 		version[4]+=info->dwProductVersionMS&255;
 		version[5]+=info->dwProductVersionLS>>16;
 		version[6]+=info->dwProductVersionMS&255;
 		if (version[6]=='@')
 			version[6]=0;
+		}
 		CString cr=LoadResString(IDS_CT_COPYRIGHT);
 		int lastword=cr.ReverseFind(' ');
 		if (lastword>cr.GetLength()-3)

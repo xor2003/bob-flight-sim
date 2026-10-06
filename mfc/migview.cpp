@@ -312,8 +312,8 @@ void CMIGView::OnInitialUpdate()
 	m_mapdlg.Create(CMapDlg::IDD,this);
 //	m_mapdlg.ShowWindow(SW_SHOW);
 	m_mapdlg.MoveWindow(0,0,30000,30000);
-	m_rVertScrollBar.Create(NULL, WS_VISIBLE | WS_CHILD, CRect(-1,-1,-1,-1), this, 1000);
-	m_rHorzScrollBar.Create(NULL, WS_VISIBLE | WS_CHILD, CRect(-1,-1,-1,-1), this, 1001);
+	m_rVertScrollBar.Create(NULL, "", WS_VISIBLE | WS_CHILD, CRect(-1,-1,-1,-1), this, 1000);
+	m_rHorzScrollBar.Create(NULL, "", WS_VISIBLE | WS_CHILD, CRect(-1,-1,-1,-1), this, 1001);
 	m_rVertScrollBar.SetParentPointer((long)this->m_hWnd);
 	m_rHorzScrollBar.SetParentPointer((long)this->m_hWnd);
 	m_rHorzScrollBar.SetHorzAlign(TRUE);

@@ -86,7 +86,7 @@ public:
 	protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV support
 	//}}AFX_VIRTUAL
-	virtual LRESULT DefWindowProcA(UINT message, WPARAM wParam, LPARAM lParam);
+	virtual LRESULT DefWindowProc(UINT message, WPARAM wParam, LPARAM lParam);
 
 // Implementation
 	bool	AllowDragItem(int buttonid);

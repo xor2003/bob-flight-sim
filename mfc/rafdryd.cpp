@@ -72,6 +72,7 @@ http://www.simhq.com/cgi-bin/boards/cgi-bin/forumdisplay.cgi?action=topics&forum
 #include "RAFDryD.h"
 #include "mytime.h"
 #include "winmove.h"
+#include "rchatter.h"										// _Radio (unity parent supplied)
 
 
 #ifdef _DEBUG

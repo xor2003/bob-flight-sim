@@ -68,6 +68,8 @@ http://www.simhq.com/cgi-bin/boards/cgi-bin/forumdisplay.cgi?action=topics&forum
 #include "stdafx.h"
 #include "bob.h"
 #include "SquadDtl.h"
+#include "sqddiary.h"
+#include "rchatter.h"									// Squad_Diary/TargetIndexes (unity parent supplied)
 
 #ifdef _DEBUG
 //#define new DEBUG_NEW

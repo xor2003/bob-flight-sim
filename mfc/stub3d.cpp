@@ -143,7 +143,10 @@ enum	{BUFFERED_KEYS=100};
         const GUID name \
                 = { l, w1, w2, { b1, b2,  b3,  b4,  b5,  b6,  b7,  b8 } }
 
-DDEFINE_GUID(IID_ILib3D,0x11038561, 0x95e1, 0x11d3, 0x87, 0x95, 0x0, 0x40, 0x5, 0x2c, 0x1f, 0x45);
+//RERUN IID_ILib3D already emitted by lib3d.h's DEFINE_GUID (static copy
+//in this TU); under MSVC DEFINE_GUID was declaration-only so this
+//DDEFINE_GUID was the one definition. Keeping it would redeclare the GUID.
+//DDEFINE_GUID(IID_ILib3D,0x11038561, 0x95e1, 0x11d3, 0x87, 0x95, 0x0, 0x40, 0x5, 0x2c, 0x1f, 0x45);
 
 #ifndef	NDEBUG
 //#define	DBGMEMTEST
@@ -1826,6 +1829,9 @@ void Mast3d::TimeProc(UINT uID, UINT uMsg, DWORD dw1, DWORD dw2 )
 	}
 }
 
+//RERUN QueryPerformanceCounter/Frequency are provided inline by
+//WIN32_COMPAT.H; redeclaring them here ambiguates the linkage.
+#if 0
 WINBASEAPI
 BOOL
 WINAPI
@@ -1839,6 +1845,7 @@ WINAPI
 QueryPerformanceFrequency(
     LARGE_INTEGER *lpFrequency
     );
+#endif
 
 void	Inst3d::DoMoveCycle()
 {

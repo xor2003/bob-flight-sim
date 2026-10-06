@@ -33,18 +33,14 @@ enum	FileNum
 	FIL_CDROMROOTDIR	=0x0201,
 	FIL_PARAMROOTDIR	=0x0301,
 
-#ifndef F_COMMON
+//RERUN PCH semantics: under MSVC+/Yu the file-enum slices were injected by
+//the precompiled header before each TU's own #define F_* selector lines ran,
+//so every slice was always visible. GCC compiles TUs flat - load all slices
+//unconditionally (the four .G files have disjoint enumerator sets).
 #include	"F_COMMON.G"
-#endif
-#ifndef F_GRAFIX
 #include	"F_GRAFIX.G"
-#endif
-#ifndef F_SOUNDS
 #include	"F_SOUNDS.G"
-#endif
-#ifndef F_BATTLE
 #include	"F_BATTLE.G"
-#endif
 
 	INVALIDFILENUM		=0xFFFF
 };

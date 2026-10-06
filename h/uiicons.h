@@ -94,9 +94,9 @@ public:
 	CPoint WH() const;
 
 //draw functions:
-	virtual bool	SolidIcon(CDC* target,CPoint& p,Alignment x=MINIMUM,Alignment y=MINIMUM);
-	virtual bool	MaskIcon(CDC* target,CPoint& p,Alignment x=MINIMUM,Alignment y=MINIMUM);
-	virtual bool	OrIcon(CDC* target,CPoint& p,Alignment x=MINIMUM,Alignment y=MINIMUM);
-	virtual bool	AndIcon(CDC* target,CPoint& p,Alignment x=MINIMUM,Alignment y=MINIMUM);
+	virtual bool	SolidIcon(CDC* target,const CPoint& p,Alignment x=MINIMUM,Alignment y=MINIMUM);
+	virtual bool	MaskIcon(CDC* target,const CPoint& p,Alignment x=MINIMUM,Alignment y=MINIMUM);
+	virtual bool	OrIcon(CDC* target,const CPoint& p,Alignment x=MINIMUM,Alignment y=MINIMUM);
+	virtual bool	AndIcon(CDC* target,const CPoint& p,Alignment x=MINIMUM,Alignment y=MINIMUM);
 };
 #endif

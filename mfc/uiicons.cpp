@@ -174,7 +174,7 @@ CPoint	IconDescUI::WH()  const
 	assert(selectedicon!=ICON_NO_ICON);
 	return CPoint(iconplace->W*IconPlace::PIXELSPERUNIT,iconplace->H*IconPlace::PIXELSPERUNIT);
 }
-bool	IconDescUI::SolidIcon(CDC* target,CPoint& p,Alignment ax,Alignment ay)
+bool	IconDescUI::SolidIcon(CDC* target,const CPoint& p,Alignment ax,Alignment ay)
 {
 	int	sx=iconplace->X*IconPlace::PIXELSPERUNIT,
 		y=iconplace->Y*IconPlace::PIXELSPERUNIT,
@@ -187,7 +187,7 @@ bool	IconDescUI::SolidIcon(CDC* target,CPoint& p,Alignment ax,Alignment ay)
 	return true;
 }
 
-bool	IconDescUI::MaskIcon(CDC* target,CPoint& p,Alignment ax,Alignment ay)
+bool	IconDescUI::MaskIcon(CDC* target,const CPoint& p,Alignment ax,Alignment ay)
 {
 	int	sx=iconplace->X*IconPlace::PIXELSPERUNIT,
 		y=iconplace->Y*IconPlace::PIXELSPERUNIT,
@@ -201,7 +201,7 @@ bool	IconDescUI::MaskIcon(CDC* target,CPoint& p,Alignment ax,Alignment ay)
 	return true;
 }
 
-bool	IconDescUI::OrIcon(CDC* target,CPoint& p,Alignment ax,Alignment ay)
+bool	IconDescUI::OrIcon(CDC* target,const CPoint& p,Alignment ax,Alignment ay)
 {
 	int	sx=iconplace->X*IconPlace::PIXELSPERUNIT,
 		y=iconplace->Y*IconPlace::PIXELSPERUNIT,
@@ -214,7 +214,7 @@ bool	IconDescUI::OrIcon(CDC* target,CPoint& p,Alignment ax,Alignment ay)
 	return true;
 }
 
-bool	IconDescUI::AndIcon(CDC* target,CPoint& p,Alignment ax,Alignment ay)
+bool	IconDescUI::AndIcon(CDC* target,const CPoint& p,Alignment ax,Alignment ay)
 {
 	int	sx=iconplace->X*IconPlace::PIXELSPERUNIT,
 		y=iconplace->Y*IconPlace::PIXELSPERUNIT,

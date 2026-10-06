@@ -68,6 +68,7 @@ http://www.simhq.com/cgi-bin/boards/cgi-bin/forumdisplay.cgi?action=topics&forum
 #include "stdafx.h"
 #include "bob.h"
 #include "SelTrg.h"
+#include "package.h"
 
 #ifdef _DEBUG
 //#define new DEBUG_NEW
@@ -168,7 +169,7 @@ void	SelectTarget::SetTargetIndex(int trgindex)
 				}
 		if (targetalt)
 			pk.AddAttackWP(trgindex,pk[currsquad].method,targetalt);
-		AttackMethodField	am=pk.ScanAttackMethods();
+		Profile::AttackMethodField	am=pk.ScanAttackMethods();
 		pk.ReorderPackage(am);
 		pk.RecalcRoutePositionsAndTime();
 }

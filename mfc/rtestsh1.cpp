@@ -76,8 +76,8 @@ http://www.simhq.com/cgi-bin/boards/cgi-bin/forumdisplay.cgi?action=topics&forum
 //TEMPCODE DAW 13/04/00 #include	"smack.h"
 #include	"persons2.h"
 #include	"globrefs.h"
-#include	"imagemap.g"
 #include	"imagemap.h"
+#include	"imagemap.g"
 #include	"gameset.h"
 #include	"miles.h"													//RJS 6Oct00
 

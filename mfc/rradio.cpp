@@ -68,89 +68,11 @@ http://www.simhq.com/cgi-bin/boards/cgi-bin/forumdisplay.cgi?action=topics&forum
 //  Microsoft Visual C++, your modifications will be overwritten.
 
 
-#include "stdafx.h"
-#include "rradio.h"
-
-/////////////////////////////////////////////////////////////////////////////
-// CRRadio
-
-IMPLEMENT_DYNCREATE(CRRadio, CWnd)
-
-/////////////////////////////////////////////////////////////////////////////
-// CRRadio properties
-
-long CRRadio::GetFontNum()
-{
-	long result;
-	GetProperty(0x1, VT_I4, (void*)&result);
-	return result;
-}
-
-void CRRadio::SetFontNum(long propVal)
-{
-	SetProperty(0x1, VT_I4, propVal);
-}
-
-long CRRadio::GetCols()
-{
-	long result;
-	GetProperty(0x2, VT_I4, (void*)&result);
-	return result;
-}
-
-void CRRadio::SetCols(long propVal)
-{
-	SetProperty(0x2, VT_I4, propVal);
-}
-
-long CRRadio::GetCurrentSelection()
-{
-	long result;
-	GetProperty(0x3, VT_I4, (void*)&result);
-	return result;
-}
-
-void CRRadio::SetCurrentSelection(long propVal)
-{
-	SetProperty(0x3, VT_I4, propVal);
-}
-
-long CRRadio::GetColumnWidth()
-{
-	long result;
-	GetProperty(0x4, VT_I4, (void*)&result);
-	return result;
-}
-
-void CRRadio::SetColumnWidth(long propVal)
-{
-	SetProperty(0x4, VT_I4, propVal);
-}
-
-OLE_COLOR CRRadio::GetForeColor()
-{
-	OLE_COLOR result;
-	GetProperty(DISPID_FORECOLOR, VT_I4, (void*)&result);
-	return result;
-}
-
-void CRRadio::SetForeColor(OLE_COLOR propVal)
-{
-	SetProperty(DISPID_FORECOLOR, VT_I4, propVal);
-}
-
-/////////////////////////////////////////////////////////////////////////////
-// CRRadio operations
-
-void CRRadio::AddButton(LPCTSTR text)
-{
-	static BYTE parms[] =
-		VTS_BSTR;
-	InvokeHelper(0x5, DISPATCH_METHOD, VT_EMPTY, NULL, parms,
-		 text);
-}
-
-void CRRadio::Clear()
-{
-	InvokeHelper(0x6, DISPATCH_METHOD, VT_EMPTY, NULL, NULL);
-}
+// PORT NOTE (T118): This file contained a Microsoft Visual C++
+// machine-generated IDispatch wrapper ("NOTE: Do not modify the contents
+// of this file") implementing the OLE/OCX control property plumbing
+// (GetProperty/SetProperty/InvokeHelper). The compat layer has no OLE;
+// the real ported widget implementation (migalley MFC layer, linked via
+// the shared widget libs) supersedes it entirely. The body is removed as
+// dead code; the file remains a valid empty TU for the _*.cpp unity
+// amalgamations that #include it.

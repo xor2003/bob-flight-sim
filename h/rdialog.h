@@ -131,7 +131,7 @@ private:
 struct DialList:DialBox
 {
 
-	DialList(DialBox& d,const DialBox& d0,
+	DialList(const DialBox& d,const DialBox& d0,
 			const DialBox& d1=*(DialBox*)NULL,
 			const DialBox& d2=*(DialBox*)NULL,
 			const DialBox& d3=*(DialBox*)NULL,
@@ -228,7 +228,7 @@ private:
 struct HTabBox:DialList
 {
 	IdList* titles;
-	HTabBox(FileNum artnum,IdList&idlist,Edges& e,
+	HTabBox(FileNum artnum,IdList idlist,Edges e,
 			const DialBox& d0,
 			const DialBox& d1=*(DialBox*)NULL,
 			const DialBox& d2=*(DialBox*)NULL,
@@ -237,14 +237,14 @@ struct HTabBox:DialList
 			const DialBox& d5=*(DialBox*)NULL,
 			const DialBox& d6=*(DialBox*)NULL,
 			const DialBox& d7=*(DialBox*)NULL):
-	DialList(d0,d1,d2,d3,d4,d5,d6,d7)
+	DialList(DialBox(FIL_NULL,nullptr),d0,d1,d2,d3,d4,d5,d6,d7)
 	{
 		titles=&idlist;
 		art=artnum;
 		edges=&e;
 		childtype=TABT;
 	}
-	HTabBox(FileNum artnum,Edges &e,
+	HTabBox(FileNum artnum,Edges e,
 			const DialBox& d0,
 			const DialBox& d1=*(DialBox*)NULL,
 			const DialBox& d2=*(DialBox*)NULL,
@@ -253,7 +253,7 @@ struct HTabBox:DialList
 			const DialBox& d5=*(DialBox*)NULL,
 			const DialBox& d6=*(DialBox*)NULL,
 			const DialBox& d7=*(DialBox*)NULL):
-	DialList(d0,d1,d2,d3,d4,d5,d6,d7)
+	DialList(DialBox(FIL_NULL,nullptr),d0,d1,d2,d3,d4,d5,d6,d7)
 	{
 		edges=&e;
 		titles=NULL;
@@ -264,7 +264,7 @@ struct HTabBox:DialList
 
 struct VTabBox:HTabBox
 {
-	VTabBox(FileNum artnum,IdList&idlist,Edges &e,
+	VTabBox(FileNum artnum,IdList idlist,Edges e,
 			const DialBox& d0,
 			const DialBox& d1=*(DialBox*)NULL,
 			const DialBox& d2=*(DialBox*)NULL,
@@ -275,7 +275,7 @@ struct VTabBox:HTabBox
 			const DialBox& d7=*(DialBox*)NULL):
 	HTabBox(artnum,idlist,e,d0,d1,d2,d3,d4,d5,d6,d7)
 	{childtype=TABR;}
-	VTabBox(FileNum artnum,Edges &e,
+	VTabBox(FileNum artnum,Edges e,
 			const DialBox& d0,
 			const DialBox& d1=*(DialBox*)NULL,
 			const DialBox& d2=*(DialBox*)NULL,
@@ -466,7 +466,7 @@ public:
 private:
 
 	int		ModScroll(UINT id,UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
-	static RDialog*	MakeParentDialog(CRect& e,RDialog* parent,DialBox* tree);
+	static RDialog*	MakeParentDialog(CRect e,RDialog* parent,const DialBox* tree);
 	RDialog*	AddChildren(const DialBox*const* diallist,int X2flag=0,CRect& rect=*(CRect*)NULL);
 	void	AddChildren(const DialBox*const* diallist,DialMake::ChildType childtype,const IdList* titles);
 public:
@@ -496,13 +496,13 @@ public:
 	void AttachTabToTabControl(const struct IdEntry *const list);
 	void AttachRelevantSplitterBars();
 //	void InitArtwork(FileNum art);
-	static	RDialog*	MakeTopDialog(CRect& e,DialList& tree)
+	static	RDialog*	MakeTopDialog(CRect e,const DialList& tree)
 		{return MakeParentDialog(e,NULL,&tree);}
-	static	RDialog*	MakeTopDialog(CRect& e,DialBox& tree)
+	static	RDialog*	MakeTopDialog(CRect e,const DialBox& tree)
 		{return MakeParentDialog(e,NULL,&tree);}
-	RDialog*	MakeDialog(CRect& e,DialList& tree)
+	RDialog*	MakeDialog(CRect e,const DialList& tree)
 		{return MakeParentDialog(e,this,&tree);}
-	RDialog*	MakeDialog(CRect& e,DialBox& tree)
+	RDialog*	MakeDialog(CRect e,const DialBox& tree)
 		{return MakeParentDialog(e,this,&tree);}
 	// Generated message map functions
 public:

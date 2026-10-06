@@ -81,6 +81,10 @@ http://www.simhq.com/cgi-bin/boards/cgi-bin/forumdisplay.cgi?action=topics&forum
 	char* compiledate=__DATE__ " " __TIME__ " ( TOSTR(USER) )";
 #endif
 
+//RERUN __cdecl is an MSVC keyword; no calling-convention qualifier on GCC
+#ifndef __cdecl
+#define __cdecl
+#endif
 #define AFX_CDECL __cdecl
 typedef char CHAR;
 #define CONST               const

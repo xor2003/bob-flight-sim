@@ -68,6 +68,7 @@ http://www.simhq.com/cgi-bin/boards/cgi-bin/forumdisplay.cgi?action=topics&forum
 #include "stdafx.h"
 #include "bob.h"
 #include "LWTaskTp.h"
+#include "package.h"
 
 #ifdef _DEBUG
 //#define new DEBUG_NEW
@@ -163,7 +164,7 @@ BOOL LWTaskTop::OnInitDialog()
 void LWTaskTop::OnOK() 
 {
 	//update attack method
-	AttackMethodField	am;
+	Profile::AttackMethodField	am;
 	am =0;
 
 	int i=0;

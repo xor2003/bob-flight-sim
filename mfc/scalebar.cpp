@@ -311,7 +311,7 @@ void CScaleBar::OnPaint()
 	{
 		CPen green (PS_SOLID,4,RGB(100,255,100));
 		CPen red	(PS_SOLID,4,RGB(255,100,100));
-		pDC->SelectObject(green);
+		pDC->SelectObject(&green);
 		int x;
 		//find end of proportional scale
 		//code to find zoom is:
@@ -329,7 +329,7 @@ void CScaleBar::OnPaint()
 			pDC->LineTo(CPoint(x,RP_SCALEEDGE));
 		}
 
-		pDC->SelectObject(red);
+		pDC->SelectObject(&red);
 		for (float scale=0.5;;scale*=2)
 		{
 			x=scale*(oldpointx-DRAWSTARTPIX)/m_oldzoom+DRAWSTARTPIX;
