@@ -14047,6 +14047,9 @@ HRESULT Lib3D::HandleNaffDriver()
 //		INT3;
         diagString = new char[100];
         _snprintf( diagString, 99, "Warning: no cardbase.rc found, so no gfx card fixes possible");
+        // RERUN: original fell into the token loop on a dead stream - getNextToken
+        // overruns the buffer. No file means no card fixes; return the S_OK the empty parse yields.
+        return S_OK;
     }
 
     struct CardToken

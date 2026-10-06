@@ -15,7 +15,7 @@ static radix_sort_t *sortTable[512];
 //Date			Tue 4 Jan 2000
 //
 //------------------------------------------------------------------------------
-__inline void RadixReset(void )
+void RadixReset(void )
 {
 	int i;
 	for (i=255;i>=0;i--) sortTable[i]=0UL;
