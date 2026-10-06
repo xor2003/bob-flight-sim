@@ -40,7 +40,10 @@ extern	SLong	LMulDiv(SLong, SLong, SLong);
 */
 inline SLong LMulDiv( SLong num, SLong num2, SLong num3 )
 {
-	return(num * num2 / num3);
+	// RERUN: shipped asm is imul+idiv -> full SIGNED 64-bit product /
+	// signed 32-bit divisor; plain num*num2 truncated to 32 bits and lost
+	// the high dword (normalise() overflowed for |a|>2^23). Migalley form.
+	return (SLong)(((int64_t)num * (int64_t)num2) / num3);
 	/*SLong	retval;
    __asm
    {

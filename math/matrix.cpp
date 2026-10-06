@@ -169,21 +169,27 @@ SLong ASMTransform(MATRIX_PTR m, SLong& x, SLong& y, SLong& z)
 		LocalZ >>= _ECX;
 		ScaleFactor = _ECX;
 	}
-	BodyX = 2 * (LocalX * m->L11
-		+ LocalY * m->L12
-        + LocalZ * m->L13);
+	BodyX = 2 * ((int64_t)LocalX * m->L11
+		+ (int64_t)LocalY * m->L12
+        + (int64_t)LocalZ * m->L13);
 
-	BodyY = 2 * (LocalX * m->L21
-		+ LocalY * m->L22
-	    + LocalZ * m->L23);
+	BodyY = 2 * ((int64_t)LocalX * m->L21
+		+ (int64_t)LocalY * m->L22
+	    + (int64_t)LocalZ * m->L23);
 
-	BodyZ = 2 * (LocalX * m->L31
-		+ LocalY * m->L32
-		+ LocalZ * m->L33);
+	BodyZ = 2 * ((int64_t)LocalX * m->L31
+		+ (int64_t)LocalY * m->L32
+		+ (int64_t)LocalZ * m->L33);
+	// RERUN: shipped MATRASM does imul -> edx:eax per element and 64-bit
+	// add/adc accumulate; int32 products can sum past 2^31 before widening.
 			
-	_EAX = SAR(BodyX >> 32)
-		| SAR(BodyY >> 32)
-		| SAR(BodyZ >> 32);
+	// RERUN: shipped asm overflow test is `mov eax,[BodyXl+2]` = bits 16..47
+	// of the 64-bit product, abs-ORed, `ja 0x7FFF` (unsigned). >>32 missed
+	// results in [2^31,2^32) and SAR() on int64 is meaningless (>>31 is not
+	// the sign bit) -- abs the 32-bit slice exactly like the asm.
+	_EAX = SAR((int32_t)(BodyX >> 16))
+		| SAR((int32_t)(BodyY >> 16))
+		| SAR((int32_t)(BodyZ >> 16));
 	if ((unsigned int)_EAX > 0x7FFF)
 	{
 		_BitScanReverse(&_ECX, _EAX);

@@ -194,7 +194,7 @@ public:
 		__asm	frndint;
 		__asm	fistp	dword ptr [edx];
 		*/
-		*int_pointer = round(f);
+		*int_pointer = (SLong)lrint(f); //RERUN: frndint+fistp rounds half-to-EVEN (x87 default RC); round() was half-away
 	}
 	//
 	// Fast outcode calc
