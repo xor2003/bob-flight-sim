@@ -88,7 +88,7 @@ void Aggregator::AggregatorGetPackets() //Bool reset, Bool timercall)
 	ULong	n,m;
 	bool	SendResult;
 	myDPID	from;
-	DWORD	BufferLen;
+	ULong	BufferLen;
 	char* Buffer;
 
 #ifndef NDEBUG
@@ -620,7 +620,7 @@ void Aggregator::BurstCatchup()
 void	Aggregator::ClearMessageQueue()
 {
 	myDPID	from;
-	DWORD	BufferLen;
+	ULong	BufferLen;
 	char* Buffer;
 
 	while (ReceiveMessage(Buffer,BufferLen,from)==DP_OK) {}
@@ -629,7 +629,7 @@ void	Aggregator::ClearMessageQueue()
 void	Aggregator::GetAllMessages()
 {
 	myDPID	from;
-	DWORD	BufferLen;
+	ULong	BufferLen;
 	char* Buffer;
 	ULong	n,m;
 	HRESULT res;

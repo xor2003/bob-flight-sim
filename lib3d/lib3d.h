@@ -463,21 +463,9 @@ public:
         };
         D3DCOLOR d3dcolor;
     };
-#if defined(__GNUC__) && !defined(_WIN32)
-    // RERUN: under mingw D3DCOLOR==ULong; operator ULong() already covers it
-    inline operator D3DCOLOR()
-    {
-        return d3dcolor;
-    }
-#endif
-    // RERUN: D3DCOLOR(DWORD/uint32_t) and ULong(unsigned long) are the same
-    // size but distinct types — SetColLighting(D3DCOLOR&) needs this exact
-    // ref conversion; identical semantics to operator ULong& (same union).
-    inline operator D3DCOLOR&()
-    {
-        return d3dcolor;
-    }
-
+    // RERUN: D3DCOLOR is DWORD; with the MSVC-faithful DWORD=unsigned long
+    // typedef it is the same type as ULong, so the ULong operators below
+    // cover it (MSVC6 tolerated the duplicate conversion decls; GCC does not).
     inline operator ULong()
     {
         return all;

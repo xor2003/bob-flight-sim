@@ -72,6 +72,7 @@ http://www.simhq.com/cgi-bin/boards/cgi-bin/forumdisplay.cgi?action=topics&forum
 #include	<dos.h>
 //#include	"stdafx.h"
 #include	"DosDefs.h"
+#include	"monotxt.h"
 
 #include	"Files.g"
 #include	"fileman.h"

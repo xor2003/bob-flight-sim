@@ -64,7 +64,7 @@ http://www.simhq.com/cgi-bin/boards/cgi-bin/forumdisplay.cgi?action=topics&forum
 
 #include "_INPU.h"
 
-#include "Analogue.cpp"
+#include "analogue.cpp"
 
 
 

@@ -102,7 +102,7 @@
 
 // Currently supported Interface ID
 
-enum INTERFACEID {
+enum SFMANINTERFACEID {
 
     ID_SFMANL100API = 0x00010000,
     ID_SFMANL101API = 0x00010001
@@ -219,7 +219,7 @@ typedef WORD SFDEVINDEX;
 
 typedef struct SFMANAGERTAG {
 
-    LRESULT (*SF_QueryInterface) ( INTERFACEID, PDWORD );
+    LRESULT (*SF_QueryInterface) ( SFMANINTERFACEID, PDWORD );
 
 } SFMANAGER, *PSFMANAGER ;
 

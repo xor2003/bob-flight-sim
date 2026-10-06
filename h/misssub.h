@@ -231,8 +231,7 @@ struct FormationType
 	int		numentries;
 //	TextRef			name;
 #pragma warning( disable : 4200)
-	FormationPos	wingpos[];
-//x0r	FormationPos	wingpos[MAXAC_FORMATIONS_NUM+MAXAC_EXTENDEDFORMATIONS_NUM];
+	FormationPos	wingpos[40];
 #pragma warning( default : 4200)
 //DeadCode RDH 24Sep96 	FormationPos	wingpos [MAXAC_FORMATIONS_NUM];
 	int	GetPerFl(int totalac)
