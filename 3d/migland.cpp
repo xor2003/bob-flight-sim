@@ -3801,11 +3801,18 @@ void CDecompressData::GeneratePointFlags(UWord edgePointCount)
 //------------------------------------------------------------------------------
 inline void CDecompressData::PointsConnected(SLong a,SLong b)
 {
+	//RERUN: original walked off directionsused[7] when a point gained a
+	//7th connection (sentinel overwritten by the 6th), silently corrupting
+	//neighbouring pointdec entries; on Linux it walked into unmapped pages.
 	UByte* ptr=pointdec[a].directionsused;
-	while (*ptr!=NULLCON) if (*ptr++==UByte(b)) return;
+	UByte* end=ptr+sizeof(pointdec[a].directionsused);
+	while (ptr!=end && *ptr!=NULLCON) if (*ptr++==UByte(b)) return;
+	if (ptr==end) return;
 	*ptr=UByte(b);
-	ptr=pointdec[b].directionsused-1;
-	while (*(++ptr)!=NULLCON) {}
+	ptr=pointdec[b].directionsused;
+	end=ptr+sizeof(pointdec[b].directionsused);
+	while (ptr!=end && *ptr!=NULLCON) ++ptr;
+	if (ptr==end) return;
 	*ptr=UByte(a);
 }
 
