@@ -469,12 +469,14 @@ public:
     {
         return d3dcolor;
     }
-    /*        inline operator D3DCOLOR&()
-            {
-                    return d3dcolor;
-            }
-    */
 #endif
+    // RERUN: D3DCOLOR(DWORD/uint32_t) and ULong(unsigned long) are the same
+    // size but distinct types — SetColLighting(D3DCOLOR&) needs this exact
+    // ref conversion; identical semantics to operator ULong& (same union).
+    inline operator D3DCOLOR&()
+    {
+        return d3dcolor;
+    }
 
     inline operator ULong()
     {
