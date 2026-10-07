@@ -855,6 +855,14 @@ inline HRESULT Lib3D::PerformSlowCopy(LPDIRECTDRAWSURFACE7 pDst,LPDIRECTDRAWSURF
     ULong gmask=ddsdDst.ddpfPixelFormat.dwGBitMask&MagicRotate(gMShift,ddsdSrc.ddpfPixelFormat.dwGBitMask);
     ULong bmask=ddsdDst.ddpfPixelFormat.dwBBitMask&MagicRotate(bMShift,ddsdSrc.ddpfPixelFormat.dwBBitMask);
 
+    // Alpha was never copied: a source without an alpha channel must land
+    // opaque in an alpha destination (what a real DD Blt does), otherwise
+    // every ARGB4444 texture loads fully transparent.
+    ULong srcAMask=ddsdSrc.ddpfPixelFormat.dwRGBAlphaBitMask;
+    ULong dstAMask=ddsdDst.ddpfPixelFormat.dwRGBAlphaBitMask;
+    UByte aMShift=calcMWordRot(GET_BIT_POS32(dstAMask)-GET_BIT_POS32(srcAMask));
+    ULong amask=dstAMask&MagicRotate(aMShift,srcAMask);
+
     DWORD swidth=rect==NULL?ddsdSrc.dwWidth:rect->right-rect->left;
     DWORD scale=1;  //xor it was strange
     for (scale; swidth!=ddsdDst.dwWidth; scale<<=1,swidth>>=1);
@@ -883,7 +891,8 @@ inline HRESULT Lib3D::PerformSlowCopy(LPDIRECTDRAWSURFACE7 pDst,LPDIRECTDRAWSURF
             {
                 //UWord a,r,g,b;
 
-                *lpDst2++=MaskAndRot(*lpSrc2,rMShift,gMShift,bMShift,rmask,gmask,bmask);
+                *lpDst2++=MaskAndRot(*lpSrc2,rMShift,gMShift,bMShift,rmask,gmask,bmask)
+                |UWord(dstAMask?(amask?UWord(MagicRotate(aMShift,*lpSrc2)&amask):dstAMask):0);
 
 //DEADCODE JON 5/11/00 					r=redShift==0?r:redShift<0?r>>-redShift:r<<redShift;							//JON 5/11/00
 //DEADCODE JON 5/11/00 					INT3;																								//JON 5/11/00
@@ -919,7 +928,8 @@ inline HRESULT Lib3D::PerformSlowCopy(LPDIRECTDRAWSURFACE7 pDst,LPDIRECTDRAWSURF
             for (DWORD x=ddsdDst.dwWidth; x>0; x--) // for each x in the destination
             {
 
-                *lpDst2++=MaskAndRot(*lpSrc2,rMShift,gMShift,bMShift,rmask,gmask,bmask);
+                *lpDst2++=MaskAndRot(*lpSrc2,rMShift,gMShift,bMShift,rmask,gmask,bmask)
+                |UWord(dstAMask?(amask?UWord(MagicRotate(aMShift,*lpSrc2)&amask):dstAMask):0);
 //setUWValue(	MaskAndRot(getULValue(lpSrc2),rMShift,gMShift,bMShift,rmask,gmask,bmask), lpDst2++ );
 //DEADCODE JON 5/11/00 					ULong a,r,g,b;
 //DEADCODE JON 5/11/00 					a=*lpSrc2;
@@ -9736,8 +9746,8 @@ void Lib3D::GenericPolyClip(SPolygon *poly /*,ULong SizeOfVertex*/)
     SVertex *pV;
     int i;
 
-    polyA=pCur=(SVertex**)Alloc(sizeof(SVertex*)*poly->vertexcount*2);
-    polyB=(SVertex**)Alloc(sizeof(SVertex*)*poly->vertexcount*2);
+    polyA=pCur=(SVertex**)Alloc(sizeof(SVertex*)*(poly->vertexcount+8));
+    polyB=(SVertex**)Alloc(sizeof(SVertex*)*(poly->vertexcount+8));
 
     pV=poly->pVertexList;
 
@@ -9890,8 +9900,8 @@ void Lib3D::PolyClipFrontBack(SPolygon *poly)
     SVertex *pV;
     int i;
 
-    polyA=pCur=(SVertex**)Alloc(sizeof(SVertex*)*poly->vertexcount*2);
-    polyB=(SVertex**)Alloc(sizeof(SVertex*)*poly->vertexcount*2);
+    polyA=pCur=(SVertex**)Alloc(sizeof(SVertex*)*(poly->vertexcount+8));
+    polyB=(SVertex**)Alloc(sizeof(SVertex*)*(poly->vertexcount+8));
 
     pV=poly->pVertexList;
 
@@ -16718,8 +16728,8 @@ void Lib3D::GenericPolyClip2D(SPolygon *poly)
     SVertex **pCur/* ,**pNxt */;
     SVertex *pV;
 
-    polyA=pCur=(SVertex**)Alloc(sizeof(SVertex*)*poly->vertexcount*2);
-    polyB=(SVertex**)Alloc(sizeof(SVertex*)*poly->vertexcount*2);
+    polyA=pCur=(SVertex**)Alloc(sizeof(SVertex*)*(poly->vertexcount+8));
+    polyB=(SVertex**)Alloc(sizeof(SVertex*)*(poly->vertexcount+8));
 
     pV=poly->pVertexList;
 
