@@ -647,7 +647,6 @@ Inst3d::~Inst3d()
 		}
 		sptr=viewedwin;
 		Interactive(NULL);
-		viewedwin=NULL;
 		while (sptr)
 		{
 			View3d* sp2=sptr;
@@ -659,9 +658,10 @@ Inst3d::~Inst3d()
 	if (Master_3d.currinst)
 	{
 		Inst3d**	sptr=&Master_3d.currinst;
-		while (*sptr!=this)
+		while (*sptr && *sptr!=this)
 			sptr=&sptr[0]->nextinst;
-		*sptr=nextinst;
+		if (*sptr==this)
+			*sptr=nextinst;
 	}
 
 	//Next, start freeing resources:
@@ -957,9 +957,10 @@ View3d::~View3d()
 	{	//screen is allocated - free resources
 	}
 	View3d**	sptr=&inst->viewedwin;
-	while (*sptr!=this)
+	while (*sptr && *sptr!=this)
 		sptr=&sptr[0]->nextview;
-	*sptr=nextview;
+	if (*sptr==this)
+		*sptr=nextview;
 
 
 //	if (View_Point)
@@ -1226,9 +1227,10 @@ View3d* Inst3d::Interactive(View3d* newwin)
 	if (newwin)
 	{
 		View3d** vw=&viewedwin;
-		while (*vw!=newwin)
+		while (*vw && *vw!=newwin)
 			vw=&vw[0]->nextview;
-		*vw=newwin->nextview;				//unhooks newwin
+		if (*vw==newwin)
+			*vw=newwin->nextview;				//unhooks newwin
 		newwin->nextview=viewedwin;
 		viewedwin=newwin;				//reinserts at front
 	}
