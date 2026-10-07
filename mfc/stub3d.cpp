@@ -1557,7 +1557,16 @@ UINT AFX_CDECL View3d::drawloop(LPVOID THISTHIS)
 //DeadCode AMM 8Sep00 				static UWord stage=0;							//AMM 07Jul99
 
 				if (!_DPlay.Implemented || _DPlay.csync)		//DAW 22Jun99
+					{static int _rdt=0,_rdn=0,_rdT=0;int _a=timeGetTime();
+					// Frame cap: the sim ticks at 50Hz on TimeProc, so frames
+					// rendered faster than 20ms only reproduce the same state;
+					// sleeping the remainder keeps a fast rasterizer from
+					// burning a whole core on identical frames.
+					{static DWORD _frameAt=0;DWORD _fn=timeGetTime();
+					 if(_frameAt&&_fn-_frameAt<20)Sleep(20-(_fn-_frameAt));
+					 _frameAt=_fn;}
 					Three_Dee.render(Master_3d.g_lpLib3d,This->View_Point,This->inst->world);
+					{static bool _rdrdbg=getenv("ROWAN_DEBUG_FPS")!=0; if(_rdrdbg){_rdt+=timeGetTime()-_a;if(++_rdn,(_rdT+=1),_rdn>=10){fprintf(stderr,"[rdr] %dms/frame\n",_rdt/_rdn);_rdt=0;_rdn=0;}}}}
 //DeadCode AMM 8Sep00 				else if (doit&0x1000)							//AMM 08Jul99
 //DeadCode AMM 8Sep00 				{												//AMM 07Jul99
 //DeadCode AMM 8Sep00 					UByte num=256/_DPlay.CurrPlayers;

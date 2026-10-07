@@ -848,7 +848,9 @@ void ThreeDee::render3d(ViewPoint* vp,WorldStuff *world)//PD 22Apr96
 	Bollox2("render");
 #endif
 	View_Point=vp;
+	static bool _rdrdbg=getenv("ROWAN_DEBUG_FPS")!=0; DWORD _pt0=_rdrdbg?timeGetTime():0;
 	bt->SetupBTree(g_lpLib3d,vp);
+	DWORD _pt1=timeGetTime();
 	nomorereallygetdata=true;
 	SHAPE.SetView(vp,g_lpLib3d);
 
@@ -885,6 +887,7 @@ void ThreeDee::render3d(ViewPoint* vp,WorldStuff *world)//PD 22Apr96
 //TempCode JON 19Sep00 	DWORD time;
 	while( (/*time=*/timeGetTime())-last_time<OverLay.screenshot.minframetime)
 		Sleep(1);
+	DWORD _pt2=timeGetTime();
 
 
 //	1.	Block movecode
@@ -901,7 +904,8 @@ void ThreeDee::render3d(ViewPoint* vp,WorldStuff *world)//PD 22Apr96
 //**********************************************************************
 
 //	2.	Set view type
-	View_Point->SelectView();									//PD 19Feb96
+	View_Point->SelectView();
+	DWORD _pt3=timeGetTime();									//PD 19Feb96
 
 
 //DEADCODE JON 4/6/00 	if (Land_Scape.UpdateTexturesWRTViewPos()==false &&
@@ -1271,7 +1275,9 @@ void ThreeDee::render3d(ViewPoint* vp,WorldStuff *world)//PD 22Apr96
 
 //	5.	Render landscape
 //TEMPCODE JIM 07/06/00 	if (ProbeTime  a12(12,"Landscape"))
+	DWORD _pt4=timeGetTime();
 	Land_Scape.RenderLandscape(	g_lpLib3d );
+	DWORD _pt5=timeGetTime();
 //DEADCODE JON 4/6/00 								,View_Point,
 //DEADCODE JON 4/6/00 								fpviewer_matrix,
 //DEADCODE JON 4/6/00 								viewer_x,viewer_y,viewer_z,
@@ -1292,6 +1298,8 @@ void ThreeDee::render3d(ViewPoint* vp,WorldStuff *world)//PD 22Apr96
 //	6.	Draws what's in the binary tree
 //TEMPCODE JIM 07/06/00 	if (ProbeTime  a24(24,"Draw vis"))
 	DrawVisibleObjects();		//render_scene();				//RJS 07Feb00
+	DWORD _pt6=timeGetTime();
+	if(_pt0&&(_pt6-_pt0)>200)fprintf(stderr,"[rdr] btree=%d sel=%d cones=%d land=%d objs=%d total=%d\n",_pt1-_pt0,_pt3-_pt2,_pt4-_pt3,_pt5-_pt4,_pt6-_pt5,_pt6-_pt0);
 
 	SHAPE.SetCloudFade();										//RJS 15Jul98
 

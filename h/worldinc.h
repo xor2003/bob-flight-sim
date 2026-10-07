@@ -129,7 +129,7 @@ public:
 
 #ifndef	NDEBUG
 void	MemTest();
-void	Delete()	{delete [](char*)ptr; ptr=NULL; size = 0; flags = 0;}
+void	Delete()	{delete [](char*)ptr; *(void* volatile*)&ptr=NULL; size = 0; flags = 0;}
 void	operator = (animptr& a){ptr = a.ptr; size = a.size; flags = a.flags;};
 void	operator = (AnimSizeField a){size = UWord(a);if (a==0){ptr = NULL; flags=NULL;}};//RJS 01Dec99
 void	operator = (AnimFlagField a){flags = ULong(a);if (a==0){ptr = NULL;size=0;}};//RJS 01Dec99
@@ -164,7 +164,7 @@ operator SimpleAircraftAnimData*();								//RJS 17Nov99
 operator BirdLauncherAnimData*();								//RJS 01Dec99
 operator BlastAnimData*();										//RJS 13Dec99
 #else
-void	Delete()	{delete [](char*)ptr; ptr=NULL;}
+void	Delete()	{delete [](char*)ptr; *(void* volatile*)&ptr=NULL;}
 void	operator = (animptr& a){ptr = a.ptr;};
 void	operator = (AnimSizeField a){if (a==0)ptr = NULL;};		//RJS 30Nov99
 void	operator = (AnimFlagField a){if (a==0)ptr = NULL;};		//RJS 30Nov99
