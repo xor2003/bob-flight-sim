@@ -1346,10 +1346,10 @@ bool	processlock)	//X //process locking always enabled externally
 			FILEMAN.MakeRoomFor(link->datasize);
 #if !defined(NDEBUG) && !defined(__BCPLUSPLUS__)
 #undef new
-			if ((fileblockdata = new(__HERE__ ": -data for file num:", MyFile) voidbigblock[link->datasize]) == NULL)
+			if ((fileblockdata = new(__HERE__ ": -data for file num:", MyFile) voidbigblock[link->datasize+1]) == NULL)
 #define new DEBUG_NEW
 #else
-			if ((fileblockdata = new (std::nothrow) voidbigblock [link->datasize])==NULL)
+			if ((fileblockdata = new (std::nothrow) voidbigblock [link->datasize+1])==NULL)
 #endif
 				_Error.EmitSysErr("Failed to allocate memory for file load "
 				"(file %x, size %d)",
@@ -1367,6 +1367,7 @@ bool	processlock)	//X //process locking always enabled externally
 					 #endif
 					 #endif   */
 			bool read_result=FILEMAN.readfileblock(filehandle, fileblockdata, link->datasize);
+			((char*)fileblockdata)[link->datasize]=0;
 			assert(read_result);
 
 			if (FILEMAN.direntries[di].openfile.number != MyFile)
