@@ -294,7 +294,9 @@ KeyMap3d*
 void keytests::Reg3dConv(FileNum f)
 {
 	fileblock b=f;
+	{static bool _kdbg=getenv("ROWAN_DEBUG_INPUT")!=0;if(_kdbg)fprintf(stderr,"[keymap] file %x size=%d\n",(int)f,(int)b.getsize());}
 	Reg3dConv((KeyMapping*)b.getdata(),b.getsize()/sizeof(KeyMapping));
+	{static bool _kdbg2=getenv("ROWAN_DEBUG_INPUT")!=0;if(_kdbg2){KeyMap3d*k=(KeyMap3d*)reftable3d.flat;if(!k)return;for(int s=0xC7;s<=0xD3;s++){fprintf(stderr,"[keymap] dik=%02x:",s);for(int c=0;c<8;c++)fprintf(stderr," %d",k->mappings[s][c]);fprintf(stderr,"\n");}}}
 
 
 }

@@ -884,6 +884,7 @@ int CMIGApp::Run()
 		case WAIT_OBJECT_0+Mast3d::NUM_EVENTS:
 			while (::PeekMessage(&AFXATTR, NULL, NULL, NULL, PM_NOREMOVE))
 			{
+				{static int _pi=0;if(++_pi%2000==1){static bool _pd=getenv("ROWAN_DEBUG_INPUT")!=0;if(_pd)fprintf(stderr,"[pump] iters=%d lastmsg=%x hwnd=%p\n",_pi,AFXATTR.message,AFXATTR.hwnd);}}
 //DEADCODE JIM 21/06/00 				Mono_Text.Print(m_msgCur.message,(UByteP)"Message");
 				bool fIn3d=Inst3d::InThe3D();
 				if ((Rtestsh1::tempblockkeys || fIn3d) && AFXATTR.message>=WM_KEYFIRST &&  AFXATTR.message<=WM_KEYLAST)

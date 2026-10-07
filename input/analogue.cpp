@@ -448,6 +448,7 @@ Bool	Analogue::Initialise(int HWNDw,int HINSTANCEi,AllowAliasing mousemode,Allow
 	for (int devnum=0;runtimedevices[devnum].devid.Data1;devnum++)
 	{
 		GUID	devid=runtimedevices[devnum].devid;
+		{static bool _dbg=getenv("ROWAN_DEBUG_INPUT")!=0;if(_dbg)fprintf(stderr,"[anal] dev%d devid.Data1=%lx ismouse=%d\r\n",devnum,runtimedevices[devnum].devid.Data1,runtimedevices[devnum].ismouse);}
 		if (devid.Data1==1)
 			GetFirstJoystick(devid);
 		else
@@ -457,6 +458,7 @@ Bool	Analogue::Initialise(int HWNDw,int HINSTANCEi,AllowAliasing mousemode,Allow
 		{
 			DIdev->CreateDevice(devid,&runtimedevices[devnum].dev,NULL);
 			int hres = runtimedevices[devnum].dev->QueryInterface(IID_IDirectInputDevice2,(LPVOID *)&runtimedevices[devnum].dev2); 
+				{static bool _dbg2=getenv("ROWAN_DEBUG_INPUT")!=0;if(_dbg2)fprintf(stderr,"[anal] created dev=%p dev2=%p hres=%lx\r\n",runtimedevices[devnum].dev,runtimedevices[devnum].dev2,(unsigned long)hres);}
 			axiscount=0;hatcount=0;
 			buttoncount=0;
 			if (runtimedevices[devnum].ismouse)

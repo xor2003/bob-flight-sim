@@ -1290,6 +1290,7 @@ View3d* Inst3d::Interactive(View3d* newwin)
 								if (!FAILED(Master_3d.g_lpDIDevice->Acquire()))
 								{
 									TRACE("Interactive setup success\n");
+									{static bool _kdbg=getenv("ROWAN_DEBUG_INPUT")!=0;if(_kdbg)fprintf(stderr,"[kbdev] armed + acquired\n");}
 //									*(char*)0xb0000='1';
 									return	rv;
 								}
@@ -1434,6 +1435,7 @@ void Inst3d::OnKeyInput()
 		IDirectInputDevice_GetDeviceData(
 			Master_3d.g_lpDIDevice,sizeof(DIDEVICEOBJECTDATA),
 			keys,&dwItems,0);
+	{static bool _kdbg=getenv("ROWAN_DEBUG_INPUT")!=0;if(_kdbg&&dwItems!=BUFFERED_KEYS)fprintf(stderr,"[keys] drained %d\n",BUFFERED_KEYS-dwItems);}
 	for(DIDEVICEOBJECTDATA*	key=keys;dwItems;dwItems--,key++)
 	{
 		int keynum=key->dwOfs;
@@ -1442,11 +1444,13 @@ void Inst3d::OnKeyInput()
 			OnKeyDown(keynum);
 		else
 			OnKeyUp(keynum);
+		{static bool _kdbg2=getenv("ROWAN_DEBUG_INPUT")!=0;if(_kdbg2)fprintf(stderr,"[keydone] dik=%02x\n",keynum);}
 	}
 }
 void	Inst3d::OnKeyDown(int keynum)
 {
 	int	index=commonkeymaps->mappings[keynum][commonkeymaps->currshifts];
+	{static bool _kdbg=getenv("ROWAN_DEBUG_INPUT")!=0;if(_kdbg)fprintf(stderr,"[keydown] dik=%02x index=%d shifts=%d\n",keynum,index,commonkeymaps->currshifts);}
 	if (index)
 	{
 		if (index<16)
