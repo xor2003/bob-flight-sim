@@ -493,6 +493,7 @@ void RFullPanelDial::LaunchScreen(FullScreen * pfullscreen)
 	pdial[0]=pdial[1]=pdial[2]=NULL;
 	Invalidate();
 	m_currentscreen=pfullscreen;
+	if (m_currentres==-1) m_currentres=GetCurrentRes();
 	artnum=pfullscreen->resolutions[m_currentres].artwork;
 	PositionRListBox();
 	localnote=NULL;

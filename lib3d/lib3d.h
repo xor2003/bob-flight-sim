@@ -304,7 +304,7 @@ struct R3DMATRIX
     }
     bool operator== ( const R3DMATRIX& other ) const
     {
-        for (ULong i=16,*aptr=(ULong*)&_11,*bptr=(ULong*)&other._11; i!=0; aptr++,bptr++)
+        for (ULong i=16,*aptr=(ULong*)&_11,*bptr=(ULong*)&other._11; i!=0; i--,aptr++,bptr++)
             if (*aptr!=*bptr) return false;
         return true;
     }
@@ -374,7 +374,7 @@ struct R3DMATRIX
 
     bool operator== ( const R3DMATRIX& other ) const
     {
-        for (ULong i=32,*aptr=(ULong*)&_11,*bptr=(ULong*)&other._11; i!=0; aptr++,bptr++)
+        for (ULong i=32,*aptr=(ULong*)&_11,*bptr=(ULong*)&other._11; i!=0; i--,aptr++,bptr++)
             if (*aptr!=*bptr) return false;
         return true;
     }

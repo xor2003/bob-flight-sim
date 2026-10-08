@@ -242,7 +242,11 @@ inline bool __fastcall	oldBITRESET(void * num1,ULong num2)
 */
 inline  bool __fastcall	BITRESET(void * num1,ULong num2)
 { 
-	return (bool) _bittestandreset((SLong *)num1, num2);
+	unsigned char* p=(unsigned char*)num1+(num2>>3);
+	unsigned char m=(unsigned char)(1u<<(num2&7));
+	bool prev=(*p&m)!=0;
+	*p=(unsigned char)(*p&~m);
+	return prev;
 }
 /*
 #else
@@ -340,7 +344,11 @@ inline bool __fastcall oldBITSET(void* num1,ULong num2)
 */
 inline bool __fastcall BITSET(void* num1,ULong num2)
 {
-	return (bool)_bittestandset((long *)num1, num2);
+	unsigned char* p=(unsigned char*)num1+(num2>>3);
+	unsigned char m=(unsigned char)(1u<<(num2&7));
+	bool prev=(*p&m)!=0;
+	*p=(unsigned char)(*p|m);
+	return prev;
 }
 /*
 #else
@@ -428,7 +436,7 @@ extern	Bool	BITTEST(const void*,ULong);
 //-----------------------------------------------------------------------------
 inline bool __fastcall BITTEST(const void* num1,ULong num2)
 {
-	return _bittest((long *)num1, num2);
+	return (((const unsigned char*)num1)[num2>>3]>>(num2&7))&1;
 	/*
 	_asm
 	{
@@ -523,7 +531,11 @@ extern	Bool	BITCOMP(void*,ULong);
 //-----------------------------------------------------------------------------
 inline bool __fastcall BITCOMP(void* num1,ULong num2)
 {
-	return _bittestandcomplement((long*)num1, num2);
+	unsigned char* p=(unsigned char*)num1+(num2>>3);
+	unsigned char m=(unsigned char)(1u<<(num2&7));
+	bool prev=(*p&m)!=0;
+	*p=(unsigned char)(*p^m);
+	return prev;
 	/*
 	_asm
 	{

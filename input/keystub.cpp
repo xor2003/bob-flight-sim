@@ -284,7 +284,7 @@ KeyMap3d*
 	{
 		keymap->mappings[mapreq->scancode][mapreq->shiftstate]=mapreq->bitflag;
 		mapreq++;
-		breakif(mapreq->bitflag==0);
+		breakif(!i || mapreq->bitflag==0);
 	}
 	((KeyMap3d*) reftable3d.flat)->active=TRUE;
 //DeadCode JIM 2Nov00 	ModeIs3D=TRUE;

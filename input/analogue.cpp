@@ -223,6 +223,8 @@ DIOBJECTDATAFORMAT	dataobjects[100];
 
 int	Analogue::TransAxis(int startaxis)
 {
+	if (startaxis<0 || startaxis>=AU_MAX)
+		return	startaxis;
 	if (tune[startaxis].aliased[currUIaliasingmode])
 	{	//axis is aliassed in certain circumstances...
 		//need to find alias description for this axis:

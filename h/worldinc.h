@@ -613,7 +613,7 @@ typedef	InfoItemFlag*	InfoItemFlagPtr;
 struct	WayPoint:public	WPOverlayItem	//o14 //o30	//uniqueid and position
 {
 	friend	COORDS3D* FindDesPos(WayPointPtr);
-	void	operator delete(void* obj)	{::delete(WayPointPtr) obj;}
+	void	operator delete(void* obj)	{::operator delete(obj);}
 #ifndef	__BCPLUSPLUS__
 	void	operator	delete(void* p,const char*,int)	{operator delete(p);}
 #endif
@@ -721,7 +721,7 @@ class	hdgitem:public	item			//o1Cs02
 public:
 	ANGLES		hdg;
 	hdgitem()	{Status.size=HdgSize;}
-	void	operator delete(void* obj)	{::delete(HdgItemPtr) obj;}
+	void	operator delete(void* obj)	{::operator delete(obj);}
 #ifndef	__BCPLUSPLUS__
 	void	operator	delete(void* p,const char*,int)	{operator delete(p);}
 #endif
@@ -736,7 +736,7 @@ class	hpitem:public	hdgitem			//o1Es02
 public:
 	ANGLES		pitch;
 	hpitem()	{Status.size=HPSize;}
-	void	operator delete(void* obj) {::delete(hpitem*) obj;}
+	void	operator delete(void* obj) {::operator delete(obj);}
 #ifndef	__BCPLUSPLUS__
 	void	operator	delete(void* p,const char*,int)	{operator delete(p);}
 #endif
@@ -751,7 +751,7 @@ class	rotitem:public	hpitem			//o20s02
 public:
 	ANGLES		roll;
 	rotitem()	{Status.size=RotatedSize;}
-	void	operator delete(void* obj) {::delete(rotitem*) obj;}
+	void	operator delete(void* obj) {::operator delete(obj);}
 #ifndef	__BCPLUSPLUS__
 	void	operator	delete(void* p,const char*,int)	{operator delete(p);}
 #endif
@@ -824,7 +824,7 @@ static	UByte	timerseed;
 static int	timeofday;
 static	void SetWorld(WorldStuff* w)	{currworld=w;}					//JIM 25Jul96
 static	WorldStuff& GetWorld() {return *currworld;}				//ARM 25Jul96
-	void	operator delete(void* obj)	{::delete(MovingItemPtr) obj;}
+	void	operator delete(void* obj)	{::operator delete(obj);}
 #ifndef	__BCPLUSPLUS__
 	void	operator	delete(void* p,const char*,int)	{operator delete(p);}
 #endif
@@ -883,7 +883,7 @@ class	TransientItem:public	mobileitem		//o35	//o50
 {
 public:
 	static int transcount;
-	void	operator delete(void* obj)	{::delete(TransientItemPtr) obj;}
+	void	operator delete(void* obj)	{::operator delete(obj);}
 #ifndef	__BCPLUSPLUS__
 	void	operator	delete(void* p,const char*,int)	{operator delete(p);}
 #endif
@@ -984,7 +984,7 @@ FormationItemPtr&	Follower()	{return (follower);}
 		leader=NULL;follower=NULL;contourlist=NULL;
 	}
 
-	void	operator delete(void* obj)	{::delete(FormationItemPtr) obj;}
+	void	operator delete(void* obj)	{::operator delete(obj);}
 #ifndef	__BCPLUSPLUS__
 	void	operator	delete(void* p,const char*,int)	{operator delete(p);}
 #endif
@@ -1314,7 +1314,7 @@ void	operator=(AirStruc&);
 #endif
 
 	void AddToList();
-	void	operator delete(void* obj)	{::delete(AirStrucPtr) obj;}
+	void	operator delete(void* obj)	{::operator delete(obj);}
 #ifndef	__BCPLUSPLUS__
 	void	operator	delete(void* p,const char*,int)	{operator delete(p);}
 #endif

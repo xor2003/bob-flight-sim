@@ -719,7 +719,7 @@ void	fileman::makedirectoryname(dirindex	reqdir, int	pathend)
 
 			string		srcpos = &((string)getdata(tmp))[direntries[reqdir].dirnameind];
 			assert(srcpos);
-			int			strsize = strlen(srcpos);
+			int			strsize = (direntries[reqdir].dirnameind==ALIASDIRIND)?0:strlen(srcpos);
 			//copy name to path space, (add '\' if required)
 			if ((direntries[reqdir].dirnameind != ALIASDIRIND))
 			{													//DAW 03Oct96
@@ -1346,10 +1346,10 @@ bool	processlock)	//X //process locking always enabled externally
 			FILEMAN.MakeRoomFor(link->datasize);
 #if !defined(NDEBUG) && !defined(__BCPLUSPLUS__)
 #undef new
-			if ((fileblockdata = new(__HERE__ ": -data for file num:", MyFile) voidbigblock[link->datasize+1]) == NULL)
+			if ((fileblockdata = new(__HERE__ ": -data for file num:", MyFile) voidbigblock[link->datasize+256]) == NULL)
 #define new DEBUG_NEW
 #else
-			if ((fileblockdata = new (std::nothrow) voidbigblock [link->datasize+1])==NULL)
+			if ((fileblockdata = new (std::nothrow) voidbigblock [link->datasize+256])==NULL)
 #endif
 				_Error.EmitSysErr("Failed to allocate memory for file load "
 				"(file %x, size %d)",
@@ -1367,7 +1367,7 @@ bool	processlock)	//X //process locking always enabled externally
 					 #endif
 					 #endif   */
 			bool read_result=FILEMAN.readfileblock(filehandle, fileblockdata, link->datasize);
-			((char*)fileblockdata)[link->datasize]=0;
+			memset((char*)fileblockdata+link->datasize,0,256);
 			assert(read_result);
 
 			if (FILEMAN.direntries[di].openfile.number != MyFile)
