@@ -390,7 +390,7 @@ CString		GetDateName(int date,DateFormat form,int time)
 	case DATE_LONG:
 		{
 //DEADCODE RDH 10/01/00 			cdate.Format("%s %i, %i",RESLIST(JANUARY, month),day,year);
-			cdate.Format("%i %s",day, RESLIST(JANUARY, month));
+			cdate.Format("%i %s",day, (const char*)RESLIST(JANUARY, month));
 			return(cdate);
 		}
 	default:

@@ -94,6 +94,8 @@ public:
 	void LaunchDial(UINT dialID,RDialog* dial)
 		{LaunchDial(dial,dialID);}
 	void LaunchDial(UINT dialID,const DialBox* dial);
+	void LaunchDial(UINT dialID,const DialBox& dial)
+		{LaunchDial(dialID,&dial);}
 	void LaunchMain(FullScreen* startscreen);
 	static int resolutions[6];
 	void	ScaleHitAreas(int xres=1024);

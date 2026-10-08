@@ -193,8 +193,8 @@ void CSelectSession::OnSelectRlistSelectsession(long row, long column)
 	{
 		if (strcmp(temp->sname,_DPlay.SessionName))					  //RDH 03/04/99
 		{
-			strncpy(&_DPlay.SessionName[0],temp->sname,59);
-				_DPlay.SessionName[59]=NULL;
+			strncpy(&_DPlay.SessionName[0],temp->sname,SESSIONNAMELEN-1);
+				_DPlay.SessionName[SESSIONNAMELEN-1]=NULL;
 		}else
 		{
 //DEADCODE AMM 10/07/99 			FullPanel()->OnSelectRlistbox(1,1);						  //RDH 03/04/99
@@ -237,8 +237,8 @@ void CSelectSession::OnTimer(UINT nIDEvent)
 			{
 				if (_DPlay.singlesession)
 				{
-					strncpy(_DPlay.SessionName,_DPlay.SessionList->sname,59);
-					_DPlay.SessionName[59]=NULL;
+					strncpy(_DPlay.SessionName,_DPlay.SessionList->sname,SESSIONNAMELEN-1);
+					_DPlay.SessionName[SESSIONNAMELEN-1]=NULL;
 
 					KillTimer(m_timer);
 

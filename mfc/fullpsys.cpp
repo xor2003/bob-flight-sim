@@ -517,6 +517,11 @@ void RFullPanelDial::OnSelectRlistbox(long row, long column)
 //	CloseSmack();
 //	OnMciNotify(0,MCI_MODE_STOP);
 
+	//Select fires for the clicked row even beyond the populated entries
+	//(empty listbox area): textlists has 10 slots, text==NULL marks the end.
+	if (x<0 || x>9 || m_currentscreen->textlists[x].text==NULL)
+		return;
+
 	FullScreen* nextscreen=m_currentscreen->textlists[x].nextscreen;
 	if (m_currentscreen->textlists[x].onselect) 
 		retval=(this->*m_currentscreen->textlists[x].onselect)(nextscreen);

@@ -1133,6 +1133,7 @@ Lib3D::Lib3D()
     :zFactor(SPolygon::zFactor)
 {
     bufferPass = 0;														//JON 30Oct00
+    hwClip = false;
 #ifndef NDEBUG
     insidePoly = false;
 #endif
@@ -5173,7 +5174,7 @@ inline HRESULT Lib3D::CopyMapToSurface( MAPDESC *pMapDesc,LPDIRECTDRAWSURFACE7 &
             pPalette[0]=(LPVOID)(pDst=new UWord[256]);
             if (pDst==NULL)
                 return DDERR_GENERIC;
-            pDst+=255;
+
 #ifndef _NOBBLE_BRIGHTER
             pSrc=(pPalette==&pTmpPal)?pMapDesc->palette+(3*255):paletteTable+(3*255)+(256*3)*pMapDesc->paletteindex;
 #else
@@ -5229,10 +5230,10 @@ inline HRESULT Lib3D::CopyMapToSurface( MAPDESC *pMapDesc,LPDIRECTDRAWSURFACE7 &
                 blueBits--;
             }
             alphaVal=UWord(pPixelFmt->dwRGBAlphaBitMask);
-            for (int i=256; i>0; pDst--,pSrc-=3,i--)
+            for (int i=256; i>0; pSrc-=3,i--)
             {
 #ifndef _NOBBLE_BRIGHTER
-                *pDst=(UWord(pSrc[0]>>redBits)<<redShift)+
+                pDst[i-1]=(UWord(pSrc[0]>>redBits)<<redShift)+
                       (UWord(pSrc[1]>>greenBits)<<greenShift)+
                       (UWord(pSrc[2]>>blueBits)<<blueShift)+
                       alphaVal;
@@ -5243,13 +5244,14 @@ inline HRESULT Lib3D::CopyMapToSurface( MAPDESC *pMapDesc,LPDIRECTDRAWSURFACE7 &
                 gf=(gf<255.f)?gf:255.f;
                 float bf=float(pSrc[2])*scaleVal;
                 bf=(bf<255.f)?bf:255.f;
-                *pDst=(UWord(UByte(rf)>>redBits)<<redShift)+
+                pDst[i-1]=(UWord(UByte(rf)>>redBits)<<redShift)+
                       (UWord(UByte(gf)>>greenBits)<<greenShift)+
                       (UWord(UByte(bf)>>blueBits)<<blueShift)+
                       alphaVal;
 #endif
             }
-            pDst[255]&=~alphaVal;
+
+            pDst[254]&=~alphaVal;
         }
         else return DDERR_GENERIC;
     }
@@ -5481,7 +5483,7 @@ inline HRESULT Lib3D::_CreateTextureMap(MAPDESC *pMapDesc,LPDIRECTDRAWSURFACE7 &
             pPalette[0]=(LPVOID)(pDst=new UWord[256]);
             if (pDst==NULL)
                 return DDERR_GENERIC;
-            pDst+=255;
+
 #ifndef _NOBBLE_BRIGHTER
             pSrc=(pPalette==&pTmpPal)?pMapDesc->palette+(3*255):paletteTable+(3*255)+(256*3)*pMapDesc->paletteindex;
 #else
@@ -5537,10 +5539,10 @@ inline HRESULT Lib3D::_CreateTextureMap(MAPDESC *pMapDesc,LPDIRECTDRAWSURFACE7 &
                 blueBits--;
             }
             alphaVal=UWord(pPixelFmt->dwRGBAlphaBitMask);
-            for (int i=256; i>0; pDst--,pSrc-=3,i--)
+            for (int i=256; i>0; pSrc-=3,i--)
             {
 #ifndef _NOBBLE_BRIGHTER
-                *pDst=(UWord(pSrc[0]>>redBits)<<redShift)+
+                pDst[i-1]=(UWord(pSrc[0]>>redBits)<<redShift)+
                       (UWord(pSrc[1]>>greenBits)<<greenShift)+
                       (UWord(pSrc[2]>>blueBits)<<blueShift)+
                       alphaVal;
@@ -5551,13 +5553,14 @@ inline HRESULT Lib3D::_CreateTextureMap(MAPDESC *pMapDesc,LPDIRECTDRAWSURFACE7 &
                 gf=(gf<255.f)?gf:255.f;
                 float bf=float(pSrc[2])*scaleVal;
                 bf=(bf<255.f)?bf:255.f;
-                *pDst=(UWord(UByte(rf)>>redBits)<<redShift)+
+                pDst[i-1]=(UWord(UByte(rf)>>redBits)<<redShift)+
                       (UWord(UByte(gf)>>greenBits)<<greenShift)+
                       (UWord(UByte(bf)>>blueBits)<<blueShift)+
                       alphaVal;
 #endif
             }
-            pDst[255]&=~alphaVal;
+
+            pDst[254]&=~alphaVal;
         }
         else return DDERR_GENERIC;
     }

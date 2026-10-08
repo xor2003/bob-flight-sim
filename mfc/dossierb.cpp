@@ -66,6 +66,7 @@ http://www.simhq.com/cgi-bin/boards/cgi-bin/forumdisplay.cgi?action=topics&forum
 //
 
 #include "stdafx.h"
+#include "MIGView.h"
 #include "bob.h"
 #include "Dossierb.h"
 #include "overlay.h"

@@ -546,7 +546,7 @@ class	CRComboExtra;
 class	CRSpinButExtra;
 class	DlgItem;
 class	RFullPanelDial;
-inline RFullPanelDial*	GetFullPanel(CMIGView* view);
+RFullPanelDial*	GetFullPanel(CMIGView* view);
 class	RowanDialog:public Rowan::CDialog
 {
 private:

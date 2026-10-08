@@ -65,6 +65,7 @@ http://www.simhq.com/cgi-bin/boards/cgi-bin/forumdisplay.cgi?action=topics&forum
 // RowanDialog: // WPDialog.cpp : implementation file
 //
 #include "stdafx.h"
+#include "MIGView.h"
 #include "_mfc.h"
 #include "bob.h"
 #include "WPDialog.h"

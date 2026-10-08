@@ -140,6 +140,9 @@ extern CDC g_OffScreenDC;
 		CMIGView::CreateObject)
 
 
+RFullPanelDial*	GetFullPanel(CMIGView* view)
+{	return	view->m_pfullpane;	}
+
 BEGIN_MESSAGE_MAP(CMIGView, CView)
 	ON_WM_CONTEXTMENU()
 	//{{AFX_MSG_MAP(CMIGView)

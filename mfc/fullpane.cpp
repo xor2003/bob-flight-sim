@@ -204,7 +204,7 @@ Bool RFullPanelDial::QuickMissionBlue()
 	const DialBox&	ND=*(DialBox*)NULL;
 
 	LaunchDial(1,
-		&DialList(DialBox(FIL_NULL,new QuickMissionPanel),			
+		DialList(DialBox(FIL_NULL,new QuickMissionPanel),			
 			DialList ( DialBox(FIL_NULL,new EmptyChildWindow, EDGES_NOSCROLLBARS_NODRAGGING),
 				(initind>0)?DialBox(FIL_NULL,new CSQuickLine(0,ilun[0][0],ilun[0][1]),EDGES_NOSCROLLBARS_NODRAGGING):ND,
 				(initind>1)?DialBox(FIL_NULL,new CSQuickLine(0,ilun[1][0],ilun[1][1]),EDGES_NOSCROLLBARS_NODRAGGING):ND,
@@ -237,7 +237,7 @@ Bool RFullPanelDial::QuickMissionRed()
 	const DialBox&	ND = *(DialBox*)NULL;
 
 	LaunchDial(1,
-		&DialList(DialBox(FIL_NULL,new QuickMissionPanel),			
+		DialList(DialBox(FIL_NULL,new QuickMissionPanel),			
 			DialList ( DialBox(FIL_NULL,new EmptyChildWindow, EDGES_NOSCROLLBARS_NODRAGGING),
 				(initindch>0)?DialBox(FIL_NULL,new CSQuickLine(1,ilch[0][0],ilch[0][1]),EDGES_NOSCROLLBARS_NODRAGGING):ND,
 				(initindch>1)?DialBox(FIL_NULL,new CSQuickLine(1,ilch[1][0],ilch[1][1]),EDGES_NOSCROLLBARS_NODRAGGING):ND,
@@ -310,7 +310,7 @@ Bool RFullPanelDial::QuickViewInit()
 	DialBox*	ND=NULL;
 
 	LaunchDial(0,
-		&DialList(Top,			
+		DialList(Top,			
 			DialList ( DialBox(FIL_NULL,new EmptyChildWindow, EDGES_NOSCROLLBARS_NODRAGGING),
 				(initind>0)?DialBox(FIL_NULL,new CViewQList(1,ilun[0][0],ilun[0][1]),EDGES_NOSCROLLBARS_NODRAGGING):*ND,
 				(initind>1)?DialBox(FIL_NULL,new CViewQList(1,ilun[1][0],ilun[1][1]),EDGES_NOSCROLLBARS_NODRAGGING):*ND,
@@ -1088,7 +1088,7 @@ Bool RFullPanelDial::PaintShopInit()
 //	DialBox	Top(FIL_NULL,new CCommsPaint);
 //
 //	LaunchDial(0,
-//		&DialList(Top,			
+//		DialList(Top,			
 //			DialList ( DialBox(FIL_NULL,new EmptyChildWindow, EDGES_NOSCROLLBARS_NODRAGGING),
 //				DialBox(FIL_NULL,new CCurrEmblem,EDGES_NOSCROLLBARS_NODRAGGING)
 //					)));

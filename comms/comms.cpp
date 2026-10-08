@@ -1559,8 +1559,8 @@ Bool DPlay::FinishLobbySetup()
 
 	if (lpDPC->lpPlayerName->lpszShortNameA)
 	{
-		strncpy (PlayerName,(char*)lpDPC->lpPlayerName->lpszShortNameA,59);
-		PlayerName[59]=NULL;
+		strncpy (PlayerName,(char*)lpDPC->lpPlayerName->lpszShortNameA,PLAYERNAMELEN-1);
+		PlayerName[PLAYERNAMELEN-1]=NULL;
 	}
 	else
 	{
@@ -1569,8 +1569,8 @@ Bool DPlay::FinishLobbySetup()
 
 	if (lpDPC->lpSessionDesc->lpszSessionNameA)
 	{
-		strncpy (SessionName,(char*)lpDPC->lpSessionDesc->lpszSessionName,59);
-		SessionName[59]=NULL;
+		strncpy (SessionName,(char*)lpDPC->lpSessionDesc->lpszSessionName,SESSIONNAMELEN-1);
+		SessionName[SESSIONNAMELEN-1]=NULL;
 	}
 	else
 	{
@@ -1994,8 +1994,10 @@ ULong DPlay::AttemptToJoin()
 
 	pack.PacketID=PID_PASSWORD;
 	pack.PlayerID=myDPlayID;
-	strncpy(&pack.pword[0],&Password[0],10);
-	strcpy(&pack.name[0],&PlayerName[0]);
+	strncpy(&pack.pword[0],&Password[0],PASSWORDNAMELEN-1);
+	pack.pword[PASSWORDNAMELEN-1]=NULL;
+	strncpy(&pack.name[0],&PlayerName[0],PLAYERNAMELEN-1);
+	pack.name[PLAYERNAMELEN-1]=NULL;
 
 
 	res=lpDP4->Send(from,to,0,&pack,sizeof(PASSWORDPACK));
@@ -3053,8 +3055,8 @@ Bool	DPlay::FindGoodSession()
 
 		if (_DPlay.SessionList)
 		{
-			strncpy(_DPlay.SessionName,_DPlay.SessionList->sname,59);
-			_DPlay.SessionName[59]=NULL;
+			strncpy(_DPlay.SessionName,_DPlay.SessionList->sname,SESSIONNAMELEN-1);
+			_DPlay.SessionName[SESSIONNAMELEN-1]=NULL;
 
 			return TRUE;
 		}

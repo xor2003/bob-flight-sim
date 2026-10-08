@@ -3270,7 +3270,7 @@ bool LandScape::ManageHighLandTextures(SLong px,SLong pz)
 //DeadCode JON 17Jul00 	for ( rez = 6; rez >= 0; rez-- )
 
 	int offScreenRes;// = OFF_SCREEN_HIGHEST_REZ;
-	for ( offScreenRes = 0; tileResList[offScreenRes].freeTiles==0; offScreenRes++ )
+	for ( offScreenRes = 0; offScreenRes<8 && tileResList[offScreenRes].freeTiles==0; offScreenRes++ )
 	{ /*search for the lowest resolution possible with free tiles*/ }
 	if ( offScreenRes > 7 )
 		offScreenRes = 0; // there are no free tiles...

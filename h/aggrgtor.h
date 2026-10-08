@@ -21,8 +21,8 @@
 class Aggregator {
 
 public:
-	Aggregator::Aggregator();
-	Aggregator::~Aggregator();
+	Aggregator();
+	~Aggregator();
 
 //DeadCode AMM 16Nov99 	void 	AggregatorGetPackets(Bool reset,Bool timercall);
 	void 	AggregatorGetPackets(); 

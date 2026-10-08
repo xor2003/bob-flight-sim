@@ -234,7 +234,7 @@ DES	fileman::~fileman()
 #ifdef	__MSVC__
 	MemFailPFU = _set_new_handler(MemFailPFU);
 #endif
-	delete[]dirrootblock;
+	delete[](voidbigblock*)dirrootblock;
 	fileblocklink::deletelink(0x7fffffff);
 	//TempCode PD 08Oct98 	ExitCDFS();
 	delete[]cdfiles;

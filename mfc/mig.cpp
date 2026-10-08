@@ -305,7 +305,7 @@ void CreatePointFont(CDC* pdc,int ind, int point,Fonts fontname,int flags,int ch
 		if (nextname)
 			testset.lfFaceName[nextname-testnames]=0;
 		int gotit=0;
-		EnumFontFamiliesEx(*pdc,&testset,EnumFontFamExProc,(long)&gotit,0);
+		EnumFontFamiliesEx(*pdc,&testset,(FONTENUMPROC)EnumFontFamExProc,(long)&gotit,0);
 		if (gotit)
 			break;
 		testnames=nextname?nextname+1:NULL;
@@ -772,7 +772,7 @@ int CMIGApp::ExitInstance()
 CMIGApp::~CMIGApp()
 {
 
-	m_pszHelpFilePath= oldhelppath;
+	m_pszHelpFilePath= const_cast<char*>(oldhelppath);
     if (resourceInst != NULL)
         FreeLibrary(resourceInst);
 	// TODO: add construction code here,

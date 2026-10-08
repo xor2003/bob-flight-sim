@@ -275,8 +275,6 @@ protected:
 inline CMIGDoc* CMIGView::GetDocument()
    { return (CMIGDoc*)m_pDocument; }
 #endif
-inline	RFullPanelDial*	GetFullPanel(CMIGView* view)
-{	return	view->m_pfullpane;	}
 
 
 /////////////////////////////////////////////////////////////////////////////

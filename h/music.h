@@ -29,8 +29,8 @@ class Music
 	int		mastervolume;
 
 public:
-	Music::Music();
-	Music::~Music();
+	Music();
+	~Music();
 
 	bool	Init(DigitalDriver*);
 	void	Play(void*,int,bool MusicTest=false);

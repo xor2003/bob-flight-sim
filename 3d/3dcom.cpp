@@ -2894,7 +2894,7 @@ void shape::doquikpoly(UByte *& instr_ptr)
 	UWord* vertices=(UWord*)(instr_ptr+sizeof(DOQUIKPOLY));
 #ifndef	_NOPOLYS_
 
-	Lib3DPoint*	pRVert = g_lpLib3d->BeginPoly(HMATERIAL(UByte(shape::newco)),numVerts);//RJS 19May00
+	Lib3DPoint*	pRVert = g_lpLib3d->BeginPoly(HMATERIAL(UByte(reinterpret_cast<uintptr_t>(shape::newco))),numVerts);//RJS 19May00
 
 	for (int i=0;i<numVerts;i++)
 		pRVert[i]=newco[*vertices++];

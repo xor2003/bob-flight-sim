@@ -7070,9 +7070,9 @@ SquadNum	NodeData::WhereToReassignProduction(PlaneTypeSelect planetype,bool forc
 				}
 			}
 		}
-		Geshwader&	gw=geschwader[gruppe[bestsq].wadernum];
 		if (bestsq!=-1)
 		{
+			Geshwader&	gw=geschwader[gruppe[bestsq].wadernum];
 			newsq=gruppe[bestsq].squadron;
 			if (gw.reconn)	//DeliverProductionRates assumes that we will only make single reconn aircraft
 				reqstr=gruppe[bestsq].acavail+1; 
