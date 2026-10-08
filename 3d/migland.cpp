@@ -4648,9 +4648,9 @@ LandMapNumRecord::~LandMapNumRecord()
 		{
 			Land_Scape.g_lpLib3d->UnloadTexture( lm + i );				//JON 7Aug00
 			
-			delete lm[i].body;						//RJS 09Feb98
-			delete lm[i].palette;					//RJS 09Feb98
-			delete lm[i].alpha;						//RJS 09Feb98
+			delete [] lm[i].body;						//RJS 09Feb98
+			delete [] lm[i].palette;					//RJS 09Feb98
+			delete [] lm[i].alpha;						//RJS 09Feb98
 			lm[i].body=NULL;						//RJS 09Feb98
 			lm[i].palette=NULL;						//RJS 09Feb98
 			lm[i].alpha=NULL;						//RJS 09Feb98
@@ -4674,7 +4674,7 @@ void LandMapNumRecord::Reset(FileNum dir)
 
 			delete [] lm[i].body;						//RJS 09Feb98
 			delete [] lm[i].palette;					//RJS 09Feb98
-			delete lm[i].alpha;						//RJS 09Feb98
+			delete [] lm[i].alpha;						//RJS 09Feb98
 			lm[i].body=NULL;						//RJS 09Feb98
 			lm[i].palette=NULL;						//RJS 09Feb98
 			lm[i].alpha=NULL;						//RJS 09Feb98

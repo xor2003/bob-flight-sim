@@ -556,3 +556,13 @@ template	<class	enumtype,int minval,int maxval> class	MakeField;
 
 #endif  // dosdefs_Included
 
+
+/* RERUN: pack(1) must be re-asserted on EVERY inclusion of this file.
+   With precompiled headers the dosdefs_Included guard above is already
+   defined (set during PCH generation), so a TU's own #include "dosdefs.h"
+   would skip this whole file and never see pshpack1.h -- leaving the TU at
+   default alignment while the PCH froze pack(1) types.  That split-layout
+   broke nodebob.h's dual-pass II_/inherited struct pairs (detailbattlefield
+   read 4 bytes early -> bogus FileNum -> "Battlefield didn't start with
+   BFSAVE!").  Leaking the push here restores the pre-PCH invariant. */
+#include <pshpack1.h>

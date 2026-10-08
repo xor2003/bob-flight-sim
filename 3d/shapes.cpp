@@ -327,21 +327,12 @@ shapestuff::shapestuff()
 //------------------------------------------------------------------------------
 shapestuff::~shapestuff()
 {
-	UWord	index;
-
-	delete [] fixuptable;											//RJS 01Dec97
-
-	for(index=0;index<list_size;index++)
-		if(shapetable[index]!=NULL)
-		{
-#ifdef	_SHAPEBUG_
-			fprintf(fpdeb,"DEL: %d\n",index+DIR_SHAPES);
-#endif
-			delete shapetable[index];
-			shapetable[index]=NULL;
-		}
-
-	delete [] shapetable;
+	//RERUN port: SHAPESTUFF is a global; at process exit other statics'
+	//dtors (~Mast3d/~Inst3d -> DeadStream::SetWorldDead -> GetShapePtr,
+	//which may lazy-load via fixuptable) still run *after* this dtor.
+	//Deliberately leak the cache so it stays valid: avoids a static-
+	//destruction-order UAF (found under ASan); the OS reclaims at exit.
+	(void)shapetable; (void)fixuptable;
 
 #ifdef	_SHAPEBUG_
 	fclose(fpdeb);
@@ -746,7 +737,8 @@ void shapestuff::FixInstrData(UByte *& ptr, ULong& datalen)
 		ptr++;
 		forwardref = FALSE;										//RJS 19Mar97
 
-		(this->*(fixuptable[instr].fixrtn)) (ptr,datalen);
+		{sfmfp fixrtn=fixuptable[instr].fixrtn;
+		(this->*fixrtn) (ptr,datalen);}
 
 //DeadCode RJS 23Apr97 		lastinstr = instr;
 

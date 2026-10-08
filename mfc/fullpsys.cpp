@@ -498,7 +498,11 @@ void RFullPanelDial::LaunchScreen(FullScreen * pfullscreen)
 	PositionRListBox();
 	localnote=NULL;
 	enablepanelselfdrawstate=false;
-	if (m_currentscreen->InitProc) (this->*m_currentscreen->InitProc)();
+	//Copy the member-fn-ptr out of the (packed) FullScreen before calling:
+	//(this->*field)() on a pack(1) struct member miscompiles under sanitizers
+	//(slot-reuse feeds a garbage array index into the bounds check).
+	Proc initproc=m_currentscreen->InitProc;
+	if (initproc) (this->*initproc)();
 	enablepanelselfdrawstate=false;
 }
 
@@ -518,13 +522,18 @@ void RFullPanelDial::OnSelectRlistbox(long row, long column)
 //	OnMciNotify(0,MCI_MODE_STOP);
 
 	//Select fires for the clicked row even beyond the populated entries
-	//(empty listbox area): textlists has 10 slots, text==NULL marks the end.
-	if (x<0 || x>9 || m_currentscreen->textlists[x].text==NULL)
+	//(empty listbox area, or -1): textlists has 10 slots.  Entries past the
+	//text==NULL terminator are all-NULL and no-op below (onselect/nextscreen
+	//are checked before use); only the index needs bounding.  Note intro/
+	//clickmap screens legitimately have textlists[0].text==NULL with a
+	//nextscreen — that IS the click-anywhere-to-continue path.
+	if (x<0 || x>9)
 		return;
 
 	FullScreen* nextscreen=m_currentscreen->textlists[x].nextscreen;
-	if (m_currentscreen->textlists[x].onselect) 
-		retval=(this->*m_currentscreen->textlists[x].onselect)(nextscreen);
+	SelProc onselect=m_currentscreen->textlists[x].onselect;
+	if (onselect) 
+		retval=(this->*onselect)(nextscreen);
 	if (retval && nextscreen)
 	{
 		// Nuke all panels then launch relevant sheet.
