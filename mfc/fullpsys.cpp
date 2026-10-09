@@ -527,7 +527,7 @@ void RFullPanelDial::OnSelectRlistbox(long row, long column)
 	//are checked before use); only the index needs bounding.  Note intro/
 	//clickmap screens legitimately have textlists[0].text==NULL with a
 	//nextscreen - that IS the click-anywhere-to-continue path.
-	if (x<0 || x>9)
+	if (!m_currentscreen || x<0 || x>9)
 		return;
 
 	FullScreen* nextscreen=m_currentscreen->textlists[x].nextscreen;
