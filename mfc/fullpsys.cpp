@@ -728,8 +728,11 @@ void	RFullPanelDial::SetTitleText(bool clear)
 	if (Miss_Man.currcampaignnum!=Miss_Man.SCRAMBLECAMPAIGN)
 		AfxGetMainWnd()->SetWindowText(RESSTRING(BOB)+": "+LoadResString(IDS_L_SCAMPAIGNSELECT1+Miss_Man.currcampaignnum));
 	else
-		if (CSQuick1::currquickmiss>=0)
-		AfxGetMainWnd()->SetWindowText(RESSTRING(BOB)+": "+LoadResString(CSQuick1::quickmissions[CSQuick1::currquickmiss].missionname));
+		//quickmissions[] ends in a {0} sentinel: missionname==0 marks
+		//the terminator too, so a stale index at the boundary is safe.
+		if (CSQuick1::currquickmiss>=0
+			&& CSQuick1::quickmissions[CSQuick1::currquickmiss].missionname)
+			AfxGetMainWnd()->SetWindowText(RESSTRING(BOB)+": "+LoadResString(CSQuick1::quickmissions[CSQuick1::currquickmiss].missionname));
 }
 
 LRESULT RFullPanelDial::WindowProc(UINT message, WPARAM wParam, LPARAM lParam) 
