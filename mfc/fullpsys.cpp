@@ -526,7 +526,7 @@ void RFullPanelDial::OnSelectRlistbox(long row, long column)
 	//text==NULL terminator are all-NULL and no-op below (onselect/nextscreen
 	//are checked before use); only the index needs bounding.  Note intro/
 	//clickmap screens legitimately have textlists[0].text==NULL with a
-	//nextscreen — that IS the click-anywhere-to-continue path.
+	//nextscreen - that IS the click-anywhere-to-continue path.
 	if (x<0 || x>9)
 		return;
 
